@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Casino</title>
+    <link rel="icon" href="favicon.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css" />
+    <!-- canvas-confetti library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="scripts/constants.js" defer></script>
+    <script src="scripts/utils.js" defer></script>
+    <script src="scripts/toast.js" defer></script>
+    <script src="scripts/roullete-bar.js" defer></script>
+    <script src="scripts/capsule-bar.js" defer></script>
+    <script src="scripts/dice-game.js" defer></script>
+    <script src="scripts/main.js" defer></script>
+  </head>
+  <body class="dark-theme">
+    <div class="app container">
+      <div class="balance">
+        <i class="bi bi-currency-dollar"></i>
+        <div class="text">2815</div>
+        <button onclick="increaseBalance(2000)"><i class="bi bi-plus-lg"></i></button>
+        <button onclick="increaseBalance(-2000)"><i class="bi bi-dash-lg"></i></button>
+      </div>
+
+      <div class="game-menu">
+        <button class="item" onclick="openGame(0)" style="background-image: url(images/banner-1.jpg)"></button>
+        <button class="item" onclick="openGame(1)" style="background-image: url(images/banner-1.jpg)"></button>
+        <button class="item" onclick="openGame(2)" style="background-image: url(images/banner-1.jpg)"></button>
+      </div>
+
+      <div class="game capsule-bar hidden">
+        <div class="panel"></div>
+      </div>
+
+      <div class="game roulette-bar hidden">
+        <div class="panel">
+          <span class="arrow hidden"></span>
+          <div class="segments"></div>
+        </div>
+      </div>
+
+      <div class="game dice-game hidden">
+        <div class="panel">
+          <div class="board"></div>
+        </div>
+      </div>
+
+      <div class="control-bar hidden">
+        <div class="bet">
+          <button onclick="increaseBet(-500)">-</button>
+          <span
+            >Total bet<br />
+            500</span
+          >
+          <button onclick="increaseBet(500)">+</button>
+        </div>
+        <div class="message">GOOD LUCK</div>
+        <button class="play" onclick="play()">Play</button>
+      </div>
+
+      <div class="toast hidden"></div>
+    </div>
+  </body>
+</html>
