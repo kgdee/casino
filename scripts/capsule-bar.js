@@ -27,7 +27,7 @@ const CapsuleBar = (() => {
               ? `
             <img src="images/${item > 0 ? `gem-${item}.png` : "bomb.png"}" />
             <img src="images/capsule-opened.png" />
-            ${shouldDisplayLabel ? `<span class="popup">x${item > 0 ? `${getMultiplier()}` : "0"}</span>` : ""}
+            ${shouldDisplayLabel ? `<span class="center">x${item > 0 ? `${getMultiplier()}` : "0"}</span>` : ""}
             `
               : `
             <img src="images/capsule.png" />

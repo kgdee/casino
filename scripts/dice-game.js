@@ -2,69 +2,71 @@ const DiceGame = (() => {
   const element = document.querySelector(".dice-game");
   const panel = element.querySelector(".panel");
   const board = element.querySelector(".board");
+  const tilemap = element.querySelector(".tilemap");
+  const diceContainer = element.querySelector(".dice-container");
+
+  const size = 5;
+  const tiles = size ** 2;
+  const borderTiles = (size - 1) * 4
 
   let isRolling = false;
+  let currentTile = 0;
 
-  function displayBoard() {
-    const size = 5;
-    const tiles = size ** 2;
-    let boardTiles = [];
-
-    board.style.gridTemplateColumns = `repeat(${size}, 50px)`;
-    board.innerHTML = "";
-    for (let i = 1; i <= tiles; i++) {
-      const isBorder = i % size <= 1 || i <= size || i > tiles - size;
-      if (isBorder) {
-        boardTiles.push(i);
-      }
-      const label = i;
-
-      board.innerHTML += `<div class="item${!isBorder ? " hole" : ""}">${label}</div>`;
-    }
-    console.log(boardTiles.length);
-  }
-
-  displayBoard();
-
-  function displayBoardT() {
-    const size = 3;
-    board.style.gridTemplateColumns = `repeat(${size}, 40px)`;
-    board.innerHTML = "";
-
-    const total = size * size;
-
-    for (let i = 0; i < total; i++) {
+  function displayTilemap() {
+    tilemap.style.gridTemplateColumns = `repeat(${size}, 50px)`;
+    tilemap.innerHTML = "";
+    for (let i = 0; i < tiles; i++) {
       const row = Math.floor(i / size);
       const col = i % size;
-      const isBorder = row === 0 || row === size - 1 || col === 0 || col === size - 1;
 
-      const cell = document.createElement("div");
-      if (isBorder) {
-        cell.className = "cell";
-        cell.textContent = `${row},${col}`;
-      } else {
-        cell.style.visibility = "hidden"; // keeps structure, hides content
-      }
+      const border = {
+        top: row === 0,
+        right: col === size - 1,
+        bottom: row === size - 1,
+        left: col === 0,
+      };
 
-      board.appendChild(cell);
+      let number = null;
+
+      if (border.top) number = col;
+      else if (border.right) number = size - 1 + row;
+      else if (border.bottom) number = (size - 1) * 3 - col;
+      else if (border.left) number = (size - 1) * 4 - row;
+
+      tilemap.innerHTML += number != null ? `<div data-number="${number}" class="item${currentTile === number ? " active" : ""}">${number}</div>` : "<div></div>";
     }
   }
 
-  function displayDice() {
-    panel.innerHTML = `<img class="dice" src="images/dice-animation.gif">`;
-    isRolling = true;
+  function displayDice(die) {
+    if (!die) die = Math.floor(Math.random() * 6) + 1;
+    diceContainer.innerHTML = `<img class="dice" src="images/dice-${die}.png" style="animation: dice 0.2s ease-out forwards;">`;
   }
 
-  function stopDice() {
-    panel.innerHTML = `<img class="dice" src="images/dice-${Math.floor(Math.random() * 6) + 1}.png" style="animation: dice 0.2s ease-out forwards;">`;
+  function roll() {
+    diceContainer.innerHTML = `<img class="dice" src="images/dice-animation.gif">`;
+    isRolling = true;
+
+    setTimeout(stop, 1000);
+  }
+
+  function stop() {
+    const die = Math.floor(Math.random() * 6) + 1;
+    displayDice(die)
+
+    currentTile = (currentTile + die) % borderTiles;
+    displayTilemap();
     isRolling = false;
   }
 
   function play() {
-    isRolling ? stopDice() : displayDice();
+    if (isRolling) return
+    roll()
   }
 
-  function restart() {}
+  function restart() {
+    displayTilemap();
+    displayDice()
+  }
 
   return { element, play, restart };
 })();

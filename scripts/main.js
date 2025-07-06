@@ -14,7 +14,7 @@ let isCheatEnabled = false;
 
 document.addEventListener("DOMContentLoaded", function () {
   updateUI();
-  openGame(2);
+  // openGame(2);
 });
 
 function play() {
