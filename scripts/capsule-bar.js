@@ -1,9 +1,10 @@
 const CapsuleBar = (() => {
   const element = document.querySelector(".capsule-bar");
-  const panel = element.querySelector(".panel");
+  const panel = element.querySelector(".panel")
+  const itemsEl = element.querySelector(".items");
+  const multiplierEl = element.querySelector(".multiplier")
 
   let currentItems = [];
-
   let openedItems = [];
   let isPlaying = false;
   let totalRewards = 0;
@@ -16,35 +17,40 @@ const CapsuleBar = (() => {
   }
 
   function update() {
-    panel.innerHTML = currentItems
+    itemsEl.innerHTML = currentItems
       .map((item, i) => {
-        const shouldDisplayLabel = (!isFinished || isLost()) && openedItems[openedItems.length - 1] === i;
+        const shouldReveal = openedItems.includes(i) || isFinished || isCheatEnabled;
+        let icon = "chip-2.png";
+        if (shouldReveal) icon = item === 0 ? "chip-skull.png" : "chip-dollar.png";
 
         return `
-        <div class="item" onclick="CapsuleBar.openItem(${i})" style="${!isPlaying ? "opacity: 0.5;" : ""}">
-          ${
-            openedItems.includes(i)
-              ? `
-            <img src="images/${item > 0 ? `gem-${item}.png` : "bomb.png"}" />
-            <img src="images/capsule-opened.png" />
-            ${shouldDisplayLabel ? `<span class="center">x${item > 0 ? `${getMultiplier()}` : "0"}</span>` : ""}
-            `
-              : `
-            <img src="images/capsule.png" />
-            ${isFinished || isCheatEnabled ? `<img src="images/${item > 0 ? `gem-${item}.png` : "bomb.png"}" />` : ""}
-            `
-          }
+        <div data-index="${i}" class="item" onclick="CapsuleBar.openItem(${i})">
+          <img src="images/${icon}" />
         </div>
       `;
       })
       .join("");
 
-    displayMessage();
     playBtn.innerHTML = isPlaying ? "End" : "Play";
+
+    handleAnimation();
+    multiplierEl.innerHTML = `${getMultiplier()}x`
+  }
+
+  function handleAnimation() {
+    const itemIndex = openedItems[openedItems.length - 1];
+    const item = currentItems[itemIndex];
+    if (item == null) return;
+    const itemEl = itemsEl.querySelector(`.item[data-index="${itemIndex}"]`);
+    let icon = `chip-${item === 0 ? "skull" : "dollar"}-animation.gif?t=${new Date().getTime()}`;
+
+    itemEl.innerHTML = `<img src="images/${icon}" />`;
   }
 
   function getMultiplier() {
-    return 0.1 * 2 ** (openedItems.length - 1);
+    let multiplier = 0
+    if (!isLost() && openedItems.length > 0) multiplier = 0.1 * 2 ** (openedItems.length - 1)
+    return multiplier;
   }
 
   function handleTotalRewards() {
@@ -56,30 +62,21 @@ const CapsuleBar = (() => {
   }
 
   function openItem(index) {
-    if (!isPlaying || openedItems.includes(index) || isFinished) return;
+    if (!isPlaying) play();
+    if (openedItems.includes(index) || isFinished) return;
 
     openedItems.push(index);
 
     handleTotalRewards();
 
-    if (currentItems[index] <= 0) {
+    const isWin = openedItems.length >= currentItems.length
+
+    if (isLost() || isWin) {
       finalize();
-      return;
+    } else {
+      update();
+      displayMessage(`Total rewards<br />$${totalRewards}`);
     }
-
-    if (openedItems.length >= currentItems.length) {
-      finalize();
-      return;
-    }
-
-    update();
-  }
-
-  function openRandomItem() {
-    const unopenedItems = currentItems.map((item, i) => i).filter((item, i) => !openedItems.includes(i));
-    const itemIndex = unopenedItems[Math.floor(Math.random() * unopenedItems.length)];
-
-    openItem(itemIndex);
   }
 
   function play() {
@@ -106,6 +103,7 @@ const CapsuleBar = (() => {
   }
 
   function restart() {
+    if (isPlaying) return;
     currentItems = getItems();
     openedItems = [];
     isPlaying = false;
@@ -114,29 +112,18 @@ const CapsuleBar = (() => {
     update();
   }
 
-  function displayMessage() {
-    let message = "GOOD LUCK";
-
-    if (isLost()) {
-      message = "GAME OVER";
-    } else if (isPlaying && totalRewards > 0) {
-      message = `Total rewards<br />$${totalRewards}`;
-    } else if (isFinished) {
-      message = `YOU WON $${totalRewards}`;
-    }
-    messageEl.innerHTML = message;
-  }
-
   function finalize() {
     isPlaying = false;
     isFinished = true;
 
     if (!isLost()) {
       increaseBalance(totalRewards);
-      launchConfetti();
+      Popup.show(getMultiplier());
+      displayMessage(`YOU WON $${totalRewards}`);
     }
 
     update();
+    displayMessage("GAME OVER");
   }
 
   return { element, play, update, openItem, restart };

@@ -12,60 +12,91 @@
     <script src="scripts/constants.js" defer></script>
     <script src="scripts/utils.js" defer></script>
     <script src="scripts/toast.js" defer></script>
+    <script src="scripts/popup.js" defer></script>
     <script src="scripts/roullete-bar.js" defer></script>
     <script src="scripts/capsule-bar.js" defer></script>
     <script src="scripts/dice-game.js" defer></script>
     <script src="scripts/main.js" defer></script>
   </head>
   <body class="dark-theme">
-    <div class="app container">
-      <div class="balance">
-        <i class="bi bi-currency-dollar"></i>
-        <div class="text">2815</div>
-        <button onclick="increaseBalance(2000)"><i class="bi bi-plus-lg"></i></button>
-        <button onclick="increaseBalance(-2000)"><i class="bi bi-dash-lg"></i></button>
-      </div>
-
-      <div class="game-menu">
-        <button class="item" onclick="openGame(0)" style="background-image: url(images/banner-1.jpg)"></button>
-        <button class="item" onclick="openGame(1)" style="background-image: url(images/banner-1.jpg)"></button>
-        <button class="item" onclick="openGame(2)" style="background-image: url(images/banner-1.jpg)"></button>
-      </div>
-
-      <div class="game capsule-bar hidden">
-        <div class="panel"></div>
-      </div>
-
-      <div class="game roulette-bar hidden">
-        <div class="panel">
-          <span class="arrow hidden"></span>
-          <div class="segments"></div>
+    <div class="app">
+      <nav class="navbar">
+        <div class="content container">
+          <img class="logo" src="images/logo.png" />
+          <div class="balance center">
+            <img src="images/chip.png" />
+            <span>2000</span>
+            <button class="button" onclick="increaseBalance(2000)"><i class="bi bi-plus-lg"></i></button>
+            <button class="button" onclick="increaseBalance(-2000)"><i class="bi bi-dash-lg"></i></button>
+          </div>
+          <div class="menu m-hidden">
+            <button onclick="goHome()"><i class="bi bi-house-door"></i></button>
+            <button><i class="bi bi-shop-window"></i></button>
+            <button><i class="bi bi-box-seam"></i></button>
+          </div>
+          <button class="hamburger hidden" onclick="toggleNavbarMenu()"><i class="bi bi-list"></i></button>
         </div>
-      </div>
+      </nav>
 
-      <div class="game dice-game hidden">
-        <div class="panel">
-          <div class="board">
-            <div class="tilemap"></div>
-            <div class="dice-container center"></div>
+      <main class="container">
+        <div class="screen home-screen">
+          <div class="game-menu">
+            <button class="item" onclick="openGame(0)" style="background-image: url(images/banner-1.jpg)"></button>
+            <button class="item" onclick="openGame(1)" style="background-image: url(images/banner-1.jpg)"></button>
+            <button class="item" onclick="openGame(2)" style="background-image: url(images/banner-1.jpg)"></button>
           </div>
         </div>
-      </div>
 
-      <div class="control-bar hidden">
-        <div class="bet">
-          <button onclick="increaseBet(-500)">-</button>
-          <span
-            >Total bet<br />
-            500</span
-          >
-          <button onclick="increaseBet(500)">+</button>
+        <div class="screen game-screen">
+          <div class="game capsule-bar flex-center hidden">
+            <div class="panel">
+              <div class="multiplier flex-center"></div>
+              <div class="items"></div>
+            </div>
+          </div>
+
+          <div class="game roulette-bar hidden">
+            <div class="panel">
+              <span class="arrow hidden"></span>
+              <div class="segments"></div>
+            </div>
+          </div>
+
+          <div class="game dice-game hidden">
+            <div class="panel">
+              <div class="board">
+                <div class="tilemap"></div>
+                <div class="dice-container center"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="control-bar hidden">
+            <div class="message"><p>GOOD LUCK</p></div>
+            <div class="controls">
+              <div class="bet">
+                <button class="button" onclick="increaseBet(-500)">
+                  <i class="bi bi-dash-lg"></i>
+                </button>
+                <span
+                  >Total bet<br />
+                  500</span
+                >
+                <button class="button" onclick="increaseBet(500)">
+                  <i class="bi bi-plus-lg"></i>
+                </button>
+              </div>
+              <button class="button play" onclick="play()">Play</button>
+              <button class="button restart" onclick="restart()">
+                <i class="bi bi-arrow-counterclockwise"></i>
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="message">GOOD LUCK</div>
-        <button class="play" onclick="play()">Play</button>
-      </div>
 
-      <div class="toast hidden"></div>
+        <div class="popup overlay hidden"></div>
+        <div class="toast hidden"></div>
+      </main>
     </div>
   </body>
 </html>

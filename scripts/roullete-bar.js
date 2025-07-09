@@ -5,7 +5,7 @@ const RouletteBar = (() => {
   const segmentsEl = element.querySelector(".roulette-bar .segments");
 
   const boardHeight = 400;
-  const items = shuffle([
+  let items = shuffle([
     { multiplier: 0.05, size: 25 },
     { multiplier: 0.05, size: 15 },
     { multiplier: 0.1, size: 20 },
@@ -17,16 +17,23 @@ const RouletteBar = (() => {
   ]);
 
   const totalSize = items.reduce((sum, item) => sum + item.size, 0);
+  const animationTime = 5;
 
   let selectedItem = -1;
 
+  function shuffleItems() {
+    items = shuffle(items)
+  }
+
   function getSegmentHeight(itemIndex) {
-    const height = boardHeight / (totalSize / items[itemIndex].size)
+    const height = boardHeight / (totalSize / items[itemIndex].size);
     return parseFloat(height.toFixed(4));
   }
 
   function getSegmentPrize(itemIndex) {
-    return currentBet * items[itemIndex].multiplier
+    let prize = currentBet * items[itemIndex].multiplier;
+    prize = Math.floor(prize);
+    return prize;
   }
 
   function update() {
@@ -41,12 +48,9 @@ const RouletteBar = (() => {
         `
       )
       .join("");
-
-    messageEl.innerHTML = items[selectedItem] ? `YOU WON $${getSegmentPrize(selectedItem)}` : "GOOD LUCK";
-    playBtn.disabled = isPlaying;
   }
 
-  async function play() {
+  function play() {
     if (isPlaying) return;
 
     if (currentBalance < currentBet) {
@@ -55,48 +59,54 @@ const RouletteBar = (() => {
     }
 
     isPlaying = true;
-
     increaseBalance(-currentBet);
+    const distance = Math.random() * boardHeight;
 
-    const targetHeight = Math.random() * boardHeight;
+    selectedItem = selectItem(distance);
+    moveArrow(distance);
 
-    selectedItem = -1;
-    update();
-    arrow.classList.remove("hidden");
-    arrow.style.top = 0;
-    arrow.style.transition = "none";
+    setTimeout(finalize, 1000 * animationTime);
+  }
 
-    const time = 5;
-    let totalDistance = 0;
+  function selectItem(distance) {
+    let itemIndex = -1;
+    let totalMove = 0;
 
     for (let i = 0; i < items.length; i++) {
-      totalDistance += getSegmentHeight(i);
+      totalMove += getSegmentHeight(i);
 
-      if (totalDistance >= targetHeight) {
-        selectedItem = i;
+      if (totalMove >= distance) {
+        itemIndex = i;
         break;
       }
     }
 
+    return itemIndex;
+  }
+
+  function moveArrow(distance) {
+    arrow.classList.remove("hidden");
+    arrow.style.top = 0;
+    arrow.style.transition = "none";
+
     setTimeout(() => {
-      arrow.style.transition = `${time}s ease-out`;
-      arrow.style.top = `${targetHeight}px`;
+      arrow.style.transition = `${animationTime}s ease-out`;
+      arrow.style.top = `${distance}px`;
     }, 100);
+  }
 
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        increaseBalance(getSegmentPrize(selectedItem));
-        resolve();
-      }, time * 1000);
-    });
-
+  function finalize() {
+    increaseBalance(getSegmentPrize(selectedItem));
     isPlaying = false;
     update();
-    launchConfetti();
+    Popup.show(selectedItem.multiplier)
+    displayMessage(`YOU WON $${getSegmentPrize(selectedItem)}`);
   }
 
   function restart() {
+    if (isPlaying) return
     selectedItem = -1;
+    shuffleItems()
     update();
   }
 

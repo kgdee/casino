@@ -5,17 +5,24 @@ const DiceGame = (() => {
   const tilemap = element.querySelector(".tilemap");
   const diceContainer = element.querySelector(".dice-container");
 
-  const size = 5;
-  const tiles = size ** 2;
-  const borderTiles = (size - 1) * 4
+  const size = 3;
+  const gridItems = size ** 2;
+  const tiles = (size - 1) * 4;
 
-  let isRolling = false;
+  let prizes = [
+    { multiplier: 2, tile: 0 },
+    { multiplier: 5, tile: 1 },
+  ];
+
+  let isPlaying = false;
+  let isLoading = false;
   let currentTile = 0;
+  let diceNumber = Math.floor(Math.random() * 6) + 1;
 
-  function displayTilemap() {
+  function updateTilemap() {
     tilemap.style.gridTemplateColumns = `repeat(${size}, 50px)`;
     tilemap.innerHTML = "";
-    for (let i = 0; i < tiles; i++) {
+    for (let i = 0; i < gridItems; i++) {
       const row = Math.floor(i / size);
       const col = i % size;
 
@@ -26,46 +33,105 @@ const DiceGame = (() => {
         left: col === 0,
       };
 
-      let number = null;
+      let tile = null;
 
-      if (border.top) number = col;
-      else if (border.right) number = size - 1 + row;
-      else if (border.bottom) number = (size - 1) * 3 - col;
-      else if (border.left) number = (size - 1) * 4 - row;
+      if (border.top) tile = col;
+      else if (border.right) tile = size - 1 + row;
+      else if (border.bottom) tile = (size - 1) * 3 - col;
+      else if (border.left) tile = (size - 1) * 4 - row;
 
-      tilemap.innerHTML += number != null ? `<div data-number="${number}" class="item${currentTile === number ? " active" : ""}">${number}</div>` : "<div></div>";
+      const prize = prizes.find((prize) => prize.tile === tile);
+      const label = prize != null ? `${prize.multiplier}x` : "";
+
+      tilemap.innerHTML += tile != null ? `<div data-tile="${tile}" class="item${prize != null ? " prize" : ""}">${label}</div>` : "<div></div>";
+    }
+
+    if (isPlaying) move();
+    else {
+      const tileEl = tilemap.querySelector(`.item[data-tile="${0}"]`);
+      tileEl.classList.add("active");
     }
   }
 
-  function displayDice(die) {
-    if (!die) die = Math.floor(Math.random() * 6) + 1;
-    diceContainer.innerHTML = `<img class="dice" src="images/dice-${die}.png" style="animation: dice 0.2s ease-out forwards;">`;
+  function move() {
+    const start = currentTile - diceNumber;
+    const end = currentTile;
+
+    for (let i = start; i <= end; i++) {
+      // true modulo to always get a positive tile number
+      const tile = ((i % tiles) + tiles) % tiles;
+
+      setTimeout(() => {
+        const tileEl = tilemap.querySelector(`.item[data-tile="${tile}"]`);
+
+        if (i < end) tileEl.style.animation = `tile 0.5s ease-out forwards`;
+        else {
+          if (prizes.some((prize) => prize.tile === i)) finalize();
+          tileEl.classList.add("active");
+          isLoading = false;
+        }
+      }, 250 * (i - start));
+    }
+  }
+
+  function displayDice() {
+    diceContainer.innerHTML = `<img class="dice" src="images/dice-${diceNumber}.png" style="animation: dice 0.2s ease-out forwards;">`;
   }
 
   function roll() {
-    diceContainer.innerHTML = `<img class="dice" src="images/dice-animation.gif">`;
-    isRolling = true;
+    isLoading = true;
+    diceContainer.innerHTML = `<img class="dice" src="images/dice-animation-2.gif">`;
+    displayMessage("Rolling...")
+
+    diceNumber = Math.floor(Math.random() * 6) + 1;
 
     setTimeout(stop, 1000);
   }
 
   function stop() {
-    const die = Math.floor(Math.random() * 6) + 1;
-    displayDice(die)
+    currentTile = (currentTile + diceNumber) % tiles;
+    displayMessage()
+    displayDice();
+    updateTilemap();
+  }
 
-    currentTile = (currentTile + die) % borderTiles;
-    displayTilemap();
-    isRolling = false;
+  function setupPrizes() {
+    let slots = Array.from({ length: tiles }, (_, i) => i);
+    slots.shift();
+
+    prizes = prizes.map((prize) => {
+      const [tile] = slots.splice(Math.floor(Math.random() * slots.length), 1);
+      return { ...prize, tile: tile };
+    });
   }
 
   function play() {
-    if (isRolling) return
-    roll()
+    if (isLoading) return;
+
+    if (currentBalance < currentBet) {
+      Toast.show("Not enough balance. Please top up to continue");
+      return;
+    }
+
+    isPlaying = true;
+    increaseBalance(-currentBet);
+    roll();
   }
 
   function restart() {
-    displayTilemap();
-    displayDice()
+    if (isLoading) return
+    isPlaying = false;
+    setupPrizes();
+    updateTilemap();
+    displayDice();
+  }
+
+  function finalize() {
+    const multiplier = prizes.find((prize) => prize.tile === currentTile).multiplier
+    const rewards = currentBet * multiplier;
+    increaseBalance(rewards);
+    Popup.show(multiplier)
+    displayMessage(`YOU WON $${rewards}`)
   }
 
   return { element, play, restart };
