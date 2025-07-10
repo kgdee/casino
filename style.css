@@ -36,12 +36,12 @@
   font-weight: bold;
 }
 
-button {
-  cursor: pointer;
+img {
+  -webkit-user-drag: none;
 }
 
-button:active {
-  filter: brightness(1.5);
+button {
+  cursor: pointer;
 }
 
 button:disabled {
@@ -85,6 +85,27 @@ button:disabled {
   transform: translate(-50%, -50%);
 }
 
+.left {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.right {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.bottom {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .flex-center {
   display: flex;
   align-items: center;
@@ -126,6 +147,7 @@ body {
 
 .navbar .logo {
   height: 32px;
+  cursor: pointer;
 }
 
 .navbar .balance {
@@ -186,104 +208,224 @@ main * {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 10px;
 }
 
-.game-menu {
+.home-screen {
+  justify-content: flex-start;
+}
+
+.home-screen .game-menu {
+  flex: 1;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 10px;
   width: 400px;
+  padding: 20px 0;
 }
 
-.game-menu .item {
+.home-screen .game-menu .item {
+  position: relative;
   width: 100%;
-  aspect-ratio: 1 / 2;
+  aspect-ratio: 1 / 1;
+  background-color: transparent;
   background-size: cover;
   background-position: center;
 }
 
-.roulette-bar {
+.home-screen .game-menu .item span {
+  background-color: black;
+  color: white;
+  font-size: 1.2rem;
+  padding: 5px;
+}
+
+.home-screen .info-img {
+  width: 100%;
+  max-height: 300px;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+}
+
+.slideshow {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 1;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.slideshow .images {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.slideshow .images img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: 0.5s ease-in-out;
+  object-fit: cover;
+  object-position: center;
+}
+
+.slideshow button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 1.5rem;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.slideshow .prev {
+  left: 10px;
+}
+
+.slideshow .next {
+  right: 10px;
+}
+
+.ticker {
+  overflow: hidden;
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.ticker * {
+  font-weight: normal;
+  font-size: 0.8rem;
+}
+
+.ticker .item {
+  flex-shrink: 0;
+  display: flex;
+  gap: 5px;
+  width: 17%;
+  min-width: 120px;
+  height: 50px;
+  background-color: var(--label-color);
+  padding: 5px;
+  border-radius: 5px;
+  animation: ticker-item 1s ease-in-out forwards;
+}
+
+.ticker .item .details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ticker .item .details .amount {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.laser-game {
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 10px;
 }
 
-.roulette-bar .panel {
+.laser-game .panel {
   position: relative;
   width: 400px;
   background-color: black;
-  border: 3px solid black;
+  border: 20px solid transparent;
+  border-radius: 20px;
+  border-image: url(images/border-1.png) 30 round;
 }
 
-.roulette-bar .arrow {
+.laser-game .arrow {
   position: absolute;
   top: 0;
   transform: translateY(-50%);
   width: 100%;
-  height: 2px;
-  background-color: var(--red);
+  display: flex;
+  justify-content: center;
 }
 
-.roulette-bar .segments {
+.arrow .line {
+  width: calc(100% - 70px);
+  height: 10px;
+  background-image: url(images/neon-line.png);
+  background-repeat: repeat;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.arrow img {
+  width: 32px;
+  aspect-ratio: 1 / 1;
+}
+
+.laser-game .segments {
   display: flex;
   flex-direction: column;
 }
 
-.roulette-bar .segment {
+.laser-game .segment {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.roulette-bar .segment.light {
-  background-color: #222;
+.laser-game .segment.light {
+  background-color: rgba(0, 0, 255, 0.2);
 }
 
-.roulette-bar .segment span {
+.laser-game .segment span {
   background-color: black;
   padding: 2px;
 }
 
-.capsule-bar .panel {
+.coins-game .panel {
+  display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 }
 
-.capsule-bar .multiplier {
+.coins-game .multiplier {
   height: 32px;
+  padding: 5px;
+  background-image: url(images/panel-3.png);
 }
 
-.capsule-bar .items {
+.coins-game .items {
   display: grid;
   grid-template-columns: repeat(3, 64px);
   grid-auto-rows: 64px;
   gap: 10px;
 }
 
-.capsule-bar .item {
+.coins-game .item {
   position: relative;
   border-radius: 50%;
   overflow: hidden;
   cursor: default;
 }
 
-.capsule-bar .item img {
+.coins-game .item img {
   position: absolute;
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
 
-.capsule-bar .item .prize-img {
+.coins-game .item .prize-img {
   margin-top: -7%;
   width: 40%;
   height: 40%;
-  
 }
 
-.capsule-bar .item span {
+.coins-game .item span {
   background-color: black;
   color: white;
   padding: 5px;
@@ -327,6 +469,10 @@ main * {
   flex-direction: column;
   align-items: center;
   gap: 10px;
+}
+
+.control-bar button:active {
+  filter: brightness(1.5);
 }
 
 .control-bar .message {
@@ -491,6 +637,15 @@ main * {
   }
   100% {
     opacity: 1;
+  }
+}
+
+@keyframes ticker-item {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% + -10px));
   }
 }
 

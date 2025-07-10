@@ -1,14 +1,17 @@
-const CapsuleBar = (() => {
-  const element = document.querySelector(".capsule-bar");
-  const panel = element.querySelector(".panel")
+const CoinsGame = (() => {
+  const name = "COINS"
+  const image = "images/game-2.png"
+  const element = document.querySelector(".coins-game");
+  const panel = element.querySelector(".panel");
   const itemsEl = element.querySelector(".items");
-  const multiplierEl = element.querySelector(".multiplier")
+  const multiplierEl = element.querySelector(".multiplier");
 
   let currentItems = [];
   let openedItems = [];
   let isPlaying = false;
   let totalRewards = 0;
   let isFinished = false;
+  let isLoading = false;
   const isLost = () => openedItems.some((itemIndex) => currentItems[itemIndex] <= 0);
 
   function getItems() {
@@ -19,12 +22,12 @@ const CapsuleBar = (() => {
   function update() {
     itemsEl.innerHTML = currentItems
       .map((item, i) => {
-        const shouldReveal = openedItems.includes(i) || isFinished || isCheatEnabled;
+        const shouldReveal = openedItems.includes(i) || isCheatEnabled;
         let icon = "chip-2.png";
         if (shouldReveal) icon = item === 0 ? "chip-skull.png" : "chip-dollar.png";
 
         return `
-        <div data-index="${i}" class="item" onclick="CapsuleBar.openItem(${i})">
+        <div data-index="${i}" class="item" onclick="CoinsGame.openItem(${i})">
           <img src="images/${icon}" />
         </div>
       `;
@@ -33,12 +36,11 @@ const CapsuleBar = (() => {
 
     playBtn.innerHTML = isPlaying ? "End" : "Play";
 
-    handleAnimation();
-    multiplierEl.innerHTML = `${getMultiplier()}x`
+    handleAnimation(openedItems[openedItems.length - 1]);
+    multiplierEl.innerHTML = `${getMultiplier()}x`;
   }
 
-  function handleAnimation() {
-    const itemIndex = openedItems[openedItems.length - 1];
+  function handleAnimation(itemIndex) {
     const item = currentItems[itemIndex];
     if (item == null) return;
     const itemEl = itemsEl.querySelector(`.item[data-index="${itemIndex}"]`);
@@ -48,8 +50,8 @@ const CapsuleBar = (() => {
   }
 
   function getMultiplier() {
-    let multiplier = 0
-    if (!isLost() && openedItems.length > 0) multiplier = 0.1 * 2 ** (openedItems.length - 1)
+    let multiplier = 0;
+    if (!isLost() && openedItems.length > 0) multiplier = 0.1 * 2 ** (openedItems.length - 1);
     return multiplier;
   }
 
@@ -62,6 +64,7 @@ const CapsuleBar = (() => {
   }
 
   function openItem(index) {
+    if (isLoading) return;
     if (!isPlaying) play();
     if (openedItems.includes(index) || isFinished) return;
 
@@ -69,7 +72,7 @@ const CapsuleBar = (() => {
 
     handleTotalRewards();
 
-    const isWin = openedItems.length >= currentItems.length
+    const isWin = openedItems.length >= currentItems.length;
 
     if (isLost() || isWin) {
       finalize();
@@ -79,7 +82,23 @@ const CapsuleBar = (() => {
     }
   }
 
+  async function reveal() {
+    isLoading = true;
+    await sleep(3000)
+    for (let i = 0; i < currentItems.length; i++) {
+      if (openedItems.includes(i)) continue
+
+      handleAnimation(i);
+
+      await sleep(500)
+    }
+
+    isLoading = false
+  }
+
   function play() {
+    if (isLoading) return;
+
     if (isPlaying) {
       finalize();
       return;
@@ -103,7 +122,7 @@ const CapsuleBar = (() => {
   }
 
   function restart() {
-    if (isPlaying) return;
+    if (isPlaying || isLoading) return;
     currentItems = getItems();
     openedItems = [];
     isPlaying = false;
@@ -123,8 +142,9 @@ const CapsuleBar = (() => {
     }
 
     update();
+    reveal();
     displayMessage("GAME OVER");
   }
 
-  return { element, play, update, openItem, restart };
+  return { name, image, element, play, update, openItem, restart };
 })();

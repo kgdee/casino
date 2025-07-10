@@ -1,4 +1,6 @@
 const DiceGame = (() => {
+  const name = "DICE"
+  const image = "images/game-3.png"
   const element = document.querySelector(".dice-game");
   const panel = element.querySelector(".panel");
   const board = element.querySelector(".board");
@@ -53,7 +55,7 @@ const DiceGame = (() => {
     }
   }
 
-  function move() {
+  async function move() {
     const start = currentTile - diceNumber;
     const end = currentTile;
 
@@ -61,16 +63,15 @@ const DiceGame = (() => {
       // true modulo to always get a positive tile number
       const tile = ((i % tiles) + tiles) % tiles;
 
-      setTimeout(() => {
-        const tileEl = tilemap.querySelector(`.item[data-tile="${tile}"]`);
+      const tileEl = tilemap.querySelector(`.item[data-tile="${tile}"]`);
 
-        if (i < end) tileEl.style.animation = `tile 0.5s ease-out forwards`;
-        else {
-          if (prizes.some((prize) => prize.tile === i)) finalize();
-          tileEl.classList.add("active");
-          isLoading = false;
-        }
-      }, 250 * (i - start));
+      if (i < end) tileEl.style.animation = `tile 0.5s ease-out forwards`;
+      else {
+        if (prizes.some((prize) => prize.tile === i)) finalize();
+        tileEl.classList.add("active");
+        isLoading = false;
+      }
+      await sleep(250);
     }
   }
 
@@ -78,19 +79,20 @@ const DiceGame = (() => {
     diceContainer.innerHTML = `<img class="dice" src="images/dice-${diceNumber}.png" style="animation: dice 0.2s ease-out forwards;">`;
   }
 
-  function roll() {
+  async function roll() {
     isLoading = true;
     diceContainer.innerHTML = `<img class="dice" src="images/dice-animation-2.gif">`;
-    displayMessage("Rolling...")
+    displayMessage("Rolling...");
 
     diceNumber = Math.floor(Math.random() * 6) + 1;
 
-    setTimeout(stop, 1000);
+    await sleep(1000)
+    stop()
   }
 
   function stop() {
     currentTile = (currentTile + diceNumber) % tiles;
-    displayMessage()
+    displayMessage();
     displayDice();
     updateTilemap();
   }
@@ -119,7 +121,7 @@ const DiceGame = (() => {
   }
 
   function restart() {
-    if (isLoading) return
+    if (isLoading) return;
     isPlaying = false;
     setupPrizes();
     updateTilemap();
@@ -127,12 +129,12 @@ const DiceGame = (() => {
   }
 
   function finalize() {
-    const multiplier = prizes.find((prize) => prize.tile === currentTile).multiplier
+    const multiplier = prizes.find((prize) => prize.tile === currentTile).multiplier;
     const rewards = currentBet * multiplier;
     increaseBalance(rewards);
-    Popup.show(multiplier)
-    displayMessage(`YOU WON $${rewards}`)
+    Popup.show(multiplier);
+    displayMessage(`YOU WON $${rewards}`);
   }
 
-  return { element, play, restart };
+  return { name, image, element, play, restart };
 })();

@@ -45,14 +45,6 @@ function getFileDataUrl(file) {
   });
 }
 
-function changeScreen(screenName) {
-  document.querySelectorAll(".screen").forEach((element) => {
-    element.classList.add("hidden");
-  });
-
-  document.querySelector(`.screen.${screenName}`).classList.remove("hidden");
-}
-
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -67,4 +59,8 @@ function shuffle(array) {
 
 function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function cycle(n, range) {
+  return ((n % range) + range) % range;
 }

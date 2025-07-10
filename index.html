@@ -13,8 +13,10 @@
     <script src="scripts/utils.js" defer></script>
     <script src="scripts/toast.js" defer></script>
     <script src="scripts/popup.js" defer></script>
-    <script src="scripts/roullete-bar.js" defer></script>
-    <script src="scripts/capsule-bar.js" defer></script>
+    <script src="scripts/slideshow.js" defer></script>
+    <script src="scripts/ticker.js" defer></script>
+    <script src="scripts/laser-game.js" defer></script>
+    <script src="scripts/coins-game.js" defer></script>
     <script src="scripts/dice-game.js" defer></script>
     <script src="scripts/main.js" defer></script>
   </head>
@@ -22,7 +24,7 @@
     <div class="app">
       <nav class="navbar">
         <div class="content container">
-          <img class="logo" src="images/logo.png" />
+          <img class="logo" src="images/logo.png" onclick="goHome()" />
           <div class="balance center">
             <img src="images/chip.png" />
             <span>2000</span>
@@ -40,24 +42,34 @@
 
       <main class="container">
         <div class="screen home-screen">
-          <div class="game-menu">
-            <button class="item" onclick="openGame(0)" style="background-image: url(images/banner-1.jpg)"></button>
-            <button class="item" onclick="openGame(1)" style="background-image: url(images/banner-1.jpg)"></button>
-            <button class="item" onclick="openGame(2)" style="background-image: url(images/banner-1.jpg)"></button>
+          <!-- <img src="images/logo-l.png" class="logo" /> -->
+          <div class="slideshow">
+            <div class="images"></div>
+
+            <button class="prev" onclick="Slideshow.slide(-1)"><i class="bi bi-caret-left"></i></button>
+            <button class="next" onclick="Slideshow.slide(1)"><i class="bi bi-caret-right"></i></button>
           </div>
+          <div class="ticker"></div>
+          <div class="game-menu"></div>
+
+          <img src="images/background-3.jpg" class="info-img">
         </div>
 
-        <div class="screen game-screen">
-          <div class="game capsule-bar flex-center hidden">
+        <div class="screen game-screen hidden">
+          <div class="game coins-game flex-center hidden">
             <div class="panel">
               <div class="multiplier flex-center"></div>
               <div class="items"></div>
             </div>
           </div>
 
-          <div class="game roulette-bar hidden">
+          <div class="game laser-game hidden">
             <div class="panel">
-              <span class="arrow hidden"></span>
+              <div class="arrow flexbox">
+                <div class="line"></div>
+                <img src="images/diamond-2.png" class="left" />
+                <img src="images/diamond-2.png" class="right" />
+              </div>
               <div class="segments"></div>
             </div>
           </div>

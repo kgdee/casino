@@ -1,11 +1,12 @@
+const gameMenu = document.querySelector(".game-menu");
 const balanceText = document.querySelector(".balance span");
 const controlBar = document.querySelector(".control-bar");
-const playBtn = controlBar.querySelector(".play")
+const playBtn = controlBar.querySelector(".play");
 const messageEl = controlBar.querySelector(".message p");
 const betDisplay = controlBar.querySelector(".bet span");
 const navbarMenu = document.querySelector(".navbar .menu");
 
-const games = [RouletteBar, CapsuleBar, DiceGame];
+const games = [LaserGame, CoinsGame, DiceGame];
 const timeOuts = { message: null };
 let currentBalance = load("currentBalance", 2000);
 let currentGame = null;
@@ -15,16 +16,29 @@ let isControlEnabled = true;
 let isCheatEnabled = false;
 
 document.addEventListener("DOMContentLoaded", function () {
+  displayGameMenu()
   updateUI();
-  openGame(1);
+  // openGame(0);
+  Slideshow.slide();
+  Ticker.start();
 });
+
+function displayGameMenu() {
+  gameMenu.innerHTML = games.map(
+    (game, i) => `
+      <button class="item" onclick="openGame(${i})" style="background-image: url(${game.image})">
+        <span class="bottom">${game.name}</span>
+      </button>
+    `
+  ).join("");
+}
 
 function play() {
   currentGame.play();
 }
 
 function restart() {
-  currentGame.restart()
+  currentGame.restart();
 }
 
 function increaseBalance(amount) {
@@ -42,6 +56,15 @@ function updateUI() {
   controlBar.classList.toggle("hidden", !currentGame);
 }
 
+function changeScreen(screenName) {
+  document.querySelectorAll(".screen").forEach((element) => {
+    element.classList.add("hidden");
+  });
+
+  document.querySelector(`.screen.${screenName}`).classList.remove("hidden");
+  toggleNavbarMenu(false);
+}
+
 function goHome() {
   changeScreen("home-screen");
 }
@@ -54,7 +77,7 @@ function openGame(gameIndex) {
   changeScreen("game-screen");
   displayGame();
   updateUI();
-  displayMessage()
+  displayMessage();
 }
 
 function displayGame() {
@@ -80,9 +103,9 @@ function increaseBet(amount) {
 
   let newBet = currentBet + amount;
   newBet = Math.round(newBet / 500) * 500;
-  newBet = Math.max(50, newBet)
-  if (newBet === currentBet) return
-  currentBet = newBet
+  newBet = Math.max(50, newBet);
+  if (newBet === currentBet) return;
+  currentBet = newBet;
 
   save("currentBet", currentBet);
 
@@ -94,7 +117,7 @@ function toggleControlBar(force) {
   controlBar.querySelectorAll("button").forEach((btn) => (btn.disabled = !isControlEnabled));
 }
 
-function displayMessage(message) {
+async function displayMessage(message) {
   if (!message) message = "GOOD LUCK";
   messageEl.innerHTML = message;
 
@@ -105,8 +128,8 @@ function displayMessage(message) {
   }, 1000);
 }
 
-function toggleNavbarMenu() {
-  navbarMenu.classList.toggle("m-hidden");
+function toggleNavbarMenu(force) {
+  navbarMenu.classList.toggle("m-hidden", force != null ? !force : undefined);
 }
 
 function toggleCheat() {

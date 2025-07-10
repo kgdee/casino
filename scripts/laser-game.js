@@ -1,8 +1,10 @@
-const RouletteBar = (() => {
-  const element = document.querySelector(".roulette-bar");
+const LaserGame = (() => {
+  const name = "LASER"
+  const image = "images/game-1.png"
+  const element = document.querySelector(".laser-game");
   const panel = element.querySelector(".panel");
   const arrow = element.querySelector(".arrow");
-  const segmentsEl = element.querySelector(".roulette-bar .segments");
+  const segmentsEl = element.querySelector(".segments");
 
   const boardHeight = 400;
   let items = shuffle([
@@ -22,7 +24,7 @@ const RouletteBar = (() => {
   let selectedItem = -1;
 
   function shuffleItems() {
-    items = shuffle(items)
+    items = shuffle(items);
   }
 
   function getSegmentHeight(itemIndex) {
@@ -50,7 +52,7 @@ const RouletteBar = (() => {
       .join("");
   }
 
-  function play() {
+  async function play() {
     if (isPlaying) return;
 
     if (currentBalance < currentBet) {
@@ -65,7 +67,8 @@ const RouletteBar = (() => {
     selectedItem = selectItem(distance);
     moveArrow(distance);
 
-    setTimeout(finalize, 1000 * animationTime);
+    await sleep(1000 * animationTime);
+    finalize();
   }
 
   function selectItem(distance) {
@@ -84,31 +87,30 @@ const RouletteBar = (() => {
     return itemIndex;
   }
 
-  function moveArrow(distance) {
+  async function moveArrow(distance) {
     arrow.classList.remove("hidden");
     arrow.style.top = 0;
     arrow.style.transition = "none";
 
-    setTimeout(() => {
-      arrow.style.transition = `${animationTime}s ease-out`;
-      arrow.style.top = `${distance}px`;
-    }, 100);
+    await sleep(100);
+    arrow.style.transition = `${animationTime}s ease-out`;
+    arrow.style.top = `${distance}px`;
   }
 
   function finalize() {
     increaseBalance(getSegmentPrize(selectedItem));
     isPlaying = false;
     update();
-    Popup.show(selectedItem.multiplier)
+    Popup.show(items[selectedItem].multiplier);
     displayMessage(`YOU WON $${getSegmentPrize(selectedItem)}`);
   }
 
   function restart() {
-    if (isPlaying) return
+    if (isPlaying) return;
     selectedItem = -1;
-    shuffleItems()
+    shuffleItems();
     update();
   }
 
-  return { element, update, play, restart };
+  return { name, image, element, update, play, restart };
 })();
