@@ -139,11 +139,12 @@ const CoinsGame = (() => {
       increaseBalance(totalRewards);
       Popup.show(getMultiplier());
       displayMessage(`YOU WON $${totalRewards}`);
+    } else {
+      displayMessage("GAME OVER");
     }
 
     update();
     reveal();
-    displayMessage("GAME OVER");
   }
 
   return { name, image, element, play, update, openItem, restart };

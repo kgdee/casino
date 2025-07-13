@@ -12,6 +12,7 @@
   --green: #4caf50;
   --blue: #3f51b5;
   --lightblue: #2196f3;
+  --gold: linear-gradient(90deg, #f9d976, #f39c12, #b8860b);
 }
 
 .dark-theme {
@@ -58,6 +59,12 @@ button:disabled {
   width: 100px;
   aspect-ratio: 215 / 79;
   background-image: url(images/button-1.png);
+}
+
+.icon-btn {
+  background-color: transparent;
+  color: var(--text-color);
+  font-size: 1.5rem;
 }
 
 .truncated {
@@ -179,18 +186,6 @@ body {
   gap: 25px;
 }
 
-.navbar .menu > * {
-  background-color: transparent;
-  color: white;
-  font-size: 1.5rem;
-}
-
-.navbar .hamburger {
-  background-color: transparent;
-  color: white;
-  font-size: 1.5rem;
-}
-
 main {
   display: flex;
   width: 100%;
@@ -245,223 +240,6 @@ main * {
   max-height: 300px;
   aspect-ratio: 2 / 1;
   object-fit: cover;
-}
-
-.slideshow {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 3 / 1;
-  overflow: hidden;
-  border-radius: 10px;
-}
-
-.slideshow .images {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.slideshow .images img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transition: 0.5s ease-in-out;
-  object-fit: cover;
-  object-position: center;
-}
-
-.slideshow button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  font-size: 1.5rem;
-  padding: 5px;
-  border-radius: 5px;
-}
-
-.slideshow .prev {
-  left: 10px;
-}
-
-.slideshow .next {
-  right: 10px;
-}
-
-.ticker {
-  overflow: hidden;
-  display: flex;
-  gap: 10px;
-  width: 100%;
-}
-
-.ticker * {
-  font-weight: normal;
-  font-size: 0.8rem;
-}
-
-.ticker .item {
-  flex-shrink: 0;
-  display: flex;
-  gap: 5px;
-  width: 17%;
-  min-width: 120px;
-  height: 50px;
-  background-color: var(--label-color);
-  padding: 5px;
-  border-radius: 5px;
-  animation: ticker-item 1s ease-in-out forwards;
-}
-
-.ticker .item .details {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.ticker .item .details .amount {
-  font-weight: bold;
-  font-size: 1rem;
-}
-
-.laser-game {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 10px;
-}
-
-.laser-game .panel {
-  position: relative;
-  width: 400px;
-  background-color: black;
-  border: 20px solid transparent;
-  border-radius: 20px;
-  border-image: url(images/border-1.png) 30 round;
-}
-
-.laser-game .arrow {
-  position: absolute;
-  top: 0;
-  transform: translateY(-50%);
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.arrow .line {
-  width: calc(100% - 70px);
-  height: 10px;
-  background-image: url(images/neon-line.png);
-  background-repeat: repeat;
-  border-radius: 50%;
-  overflow: hidden;
-}
-
-.arrow img {
-  width: 32px;
-  aspect-ratio: 1 / 1;
-}
-
-.laser-game .segments {
-  display: flex;
-  flex-direction: column;
-}
-
-.laser-game .segment {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.laser-game .segment.light {
-  background-color: rgba(0, 0, 255, 0.2);
-}
-
-.laser-game .segment span {
-  background-color: black;
-  padding: 2px;
-}
-
-.coins-game .panel {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.coins-game .multiplier {
-  height: 32px;
-  padding: 5px;
-  background-image: url(images/panel-3.png);
-}
-
-.coins-game .items {
-  display: grid;
-  grid-template-columns: repeat(3, 64px);
-  grid-auto-rows: 64px;
-  gap: 10px;
-}
-
-.coins-game .item {
-  position: relative;
-  border-radius: 50%;
-  overflow: hidden;
-  cursor: default;
-}
-
-.coins-game .item img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.coins-game .item .prize-img {
-  margin-top: -7%;
-  width: 40%;
-  height: 40%;
-}
-
-.coins-game .item span {
-  background-color: black;
-  color: white;
-  padding: 5px;
-  animation: prize-label 2s ease-out forwards;
-}
-
-.dice-game .board {
-  position: relative;
-}
-
-.dice-game .tilemap {
-  display: grid;
-  grid-template-columns: repeat(3, 50px);
-  grid-auto-rows: 50px;
-  gap: 2px;
-}
-
-.dice-game .tilemap .item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-image: url(images/tile-1.png);
-  aspect-ratio: 1 / 1;
-}
-
-.dice-game .tilemap .item.prize {
-  background-image: url(images/tile-2.png);
-}
-
-.dice-game .tilemap .item.active {
-  filter: brightness(1.5);
-}
-
-.dice-game .dice {
-  width: 64px;
-  height: 64px;
 }
 
 .control-bar {
@@ -525,109 +303,6 @@ main * {
   background-image: url(images/button-6.png);
 }
 
-.toast {
-  pointer-events: none;
-  position: fixed;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  padding: 10px;
-}
-
-.toast .item {
-  background-color: rgba(0, 0, 0, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  color: white;
-  padding: 12px 20px;
-  border-radius: 5px;
-  width: max-content;
-  max-width: 100%;
-}
-
-.popup {
-  pointer-events: none;
-}
-
-.popup img {
-  width: 300px;
-  object-fit: contain;
-  object-position: center;
-}
-
-@keyframes prize-label {
-  0% {
-    scale: 1.5;
-  }
-  10% {
-    scale: 1;
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes coin-label {
-  0% {
-    transform: translate(-50%, -50%) scaleY(0);
-  }
-  49% {
-    transform: translate(-50%, -50%) scaleY(0);
-  }
-  50% {
-    transform: translate(-50%, -50%) scaleY(0.2);
-  }
-  100% {
-    transform: translate(-50%, -50%) scaleY(1);
-  }
-}
-
-@keyframes dice {
-  0% {
-    margin-top: 0px;
-  }
-  25% {
-    margin-top: -15px;
-  }
-  50% {
-    margin-top: 0;
-  }
-  75% {
-    margin-top: -15px;
-  }
-  100% {
-    margin-top: 0;
-  }
-}
-
-@keyframes tile {
-  0% {
-    filter: brightness(2);
-  }
-  100% {
-    filter: none;
-  }
-}
-
-@keyframes popup {
-  0% {
-    top: 0;
-  }
-  20% {
-    top: 50%;
-  }
-  80% {
-    top: 50%;
-  }
-  100% {
-    top: 100%;
-  }
-}
-
 @keyframes message {
   0% {
     opacity: 1;
@@ -637,15 +312,6 @@ main * {
   }
   100% {
     opacity: 1;
-  }
-}
-
-@keyframes ticker-item {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(calc(-100% + -10px));
   }
 }
 
@@ -661,6 +327,8 @@ main * {
     right: 0;
     z-index: 1;
     flex-direction: column;
+    background-color: var(--label-color);
+    padding: 10px;
   }
 
   .navbar .hamburger {

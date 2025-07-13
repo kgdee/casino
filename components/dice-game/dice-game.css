@@ -1,0 +1,59 @@
+
+.dice-game .board {
+  position: relative;
+}
+
+.dice-game .tilemap {
+  display: grid;
+  grid-template-columns: repeat(3, 50px);
+  grid-auto-rows: 50px;
+  gap: 2px;
+}
+
+.dice-game .tilemap .item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url(/images/tile-1.png);
+  aspect-ratio: 1 / 1;
+}
+
+.dice-game .tilemap .item.prize {
+  background-image: url(/images/tile-2.png);
+}
+
+.dice-game .tilemap .item.active {
+  filter: brightness(1.5);
+}
+
+.dice-game .dice {
+  width: 64px;
+  height: 64px;
+}
+
+@keyframes dice {
+  0% {
+    margin-top: 0px;
+  }
+  25% {
+    margin-top: -15px;
+  }
+  50% {
+    margin-top: 0;
+  }
+  75% {
+    margin-top: -15px;
+  }
+  100% {
+    margin-top: 0;
+  }
+}
+
+@keyframes tile {
+  0% {
+    filter: brightness(2);
+  }
+  100% {
+    filter: none;
+  }
+}

@@ -1,0 +1,39 @@
+
+.coins-game .panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.coins-game .multiplier {
+  height: 32px;
+  padding: 5px;
+  background-image: url(/images/panel-3.png);
+}
+
+.coins-game .items {
+  display: grid;
+  grid-template-columns: repeat(3, 64px);
+  grid-auto-rows: 64px;
+  gap: 10px;
+}
+
+.coins-game .item {
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: default;
+}
+
+.coins-game .item img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.coins-game .item .prize-img {
+  margin-top: -7%;
+  width: 40%;
+  height: 40%;
+}

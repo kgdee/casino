@@ -7,20 +7,28 @@
     <link rel="icon" href="favicon.png" type="image/x-icon" />
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="components/coins-game/coins-game.css" />
+    <link rel="stylesheet" href="components/dice-game/dice-game.css" />
+    <link rel="stylesheet" href="components/laser-game/laser-game.css" />
+    <link rel="stylesheet" href="components/popup/popup.css" />
+    <link rel="stylesheet" href="components/slideshow/slideshow.css" />
+    <link rel="stylesheet" href="components/ticker/ticker.css" />
+    <link rel="stylesheet" href="components/toast/toast.css" />
     <!-- canvas-confetti library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    <script src="scripts/constants.js" defer></script>
-    <script src="scripts/utils.js" defer></script>
-    <script src="scripts/toast.js" defer></script>
-    <script src="scripts/popup.js" defer></script>
-    <script src="scripts/slideshow.js" defer></script>
-    <script src="scripts/ticker.js" defer></script>
-    <script src="scripts/laser-game.js" defer></script>
-    <script src="scripts/coins-game.js" defer></script>
-    <script src="scripts/dice-game.js" defer></script>
-    <script src="scripts/main.js" defer></script>
+    <script src="constants.js" defer></script>
+    <script src="utils.js" defer></script>
+    <script src="components/toast/toast.js" defer></script>
+    <script src="components/popup/popup.js" defer></script>
+    <script src="components/slideshow/slideshow.js" defer></script>
+    <script src="components/ticker/ticker.js" defer></script>
+    <script src="components/inventory/inventory.js" defer></script>
+    <script src="components/laser-game/laser-game.js" defer></script>
+    <script src="components/coins-game/coins-game.js" defer></script>
+    <script src="components/dice-game/dice-game.js" defer></script>
+    <script src="script.js" defer></script>
   </head>
-  <body class="dark-theme">
+  <body>
     <div class="app">
       <nav class="navbar">
         <div class="content container">
@@ -32,11 +40,12 @@
             <button class="button" onclick="increaseBalance(-2000)"><i class="bi bi-dash-lg"></i></button>
           </div>
           <div class="menu m-hidden">
-            <button onclick="goHome()"><i class="bi bi-house-door"></i></button>
-            <button><i class="bi bi-shop-window"></i></button>
-            <button><i class="bi bi-box-seam"></i></button>
+            <button class="icon-btn" onclick="goHome()"><i class="bi bi-house-door"></i></button>
+            <button class="icon-btn"><i class="bi bi-shop-window"></i></button>
+            <button class="icon-btn" onclick="inventory.toggle()"><i class="bi bi-box-seam"></i></button>
+            <button class="icon-btn theme-toggle" onclick="toggleDarkTheme()"><i class="bi bi-moon"></i></button>
           </div>
-          <button class="hamburger hidden" onclick="toggleNavbarMenu()"><i class="bi bi-list"></i></button>
+          <button class="hamburger icon-btn hidden" onclick="toggleNavbarMenu()"><i class="bi bi-list"></i></button>
         </div>
       </nav>
 
@@ -108,6 +117,8 @@
 
         <div class="popup overlay hidden"></div>
         <div class="toast hidden"></div>
+
+        <my-inventory></my-inventory>
       </main>
     </div>
   </body>

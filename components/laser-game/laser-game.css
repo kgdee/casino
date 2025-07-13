@@ -1,0 +1,59 @@
+
+.laser-game {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.laser-game .panel {
+  position: relative;
+  width: 400px;
+  background-color: black;
+  border: 20px solid transparent;
+  border-radius: 20px;
+  border-image: url(/images/border-1.png) 30 round;
+}
+
+.laser-game .arrow {
+  position: absolute;
+  top: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.laser-game .arrow .line {
+  width: calc(100% - 70px);
+  height: 10px;
+  background-image: url(/images/neon-line.png);
+  background-repeat: repeat;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.laser-game .arrow img {
+  width: 32px;
+  aspect-ratio: 1 / 1;
+}
+
+.laser-game .segments {
+  display: flex;
+  flex-direction: column;
+}
+
+.laser-game .segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.laser-game .segment.light {
+  background-color: rgba(0, 0, 255, 0.2);
+}
+
+.laser-game .segment span {
+  background-color: black;
+  padding: 2px;
+}

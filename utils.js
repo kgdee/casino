@@ -64,3 +64,11 @@ function getRandomNumber(min, max) {
 function cycle(n, range) {
   return ((n % range) + range) % range;
 }
+
+function changeScreen(screenName) {
+  document.querySelectorAll(".screen").forEach((element) => {
+    element.classList.add("hidden");
+  });
+
+  document.querySelector(`.screen.${screenName}`).classList.remove("hidden");
+}

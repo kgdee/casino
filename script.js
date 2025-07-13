@@ -5,6 +5,7 @@ const playBtn = controlBar.querySelector(".play");
 const messageEl = controlBar.querySelector(".message p");
 const betDisplay = controlBar.querySelector(".bet span");
 const navbarMenu = document.querySelector(".navbar .menu");
+const inventory = document.querySelector("my-inventory")
 
 const games = [LaserGame, CoinsGame, DiceGame];
 const timeOuts = { message: null };
@@ -14,6 +15,7 @@ let isPlaying = false;
 let currentBet = load("currentBet", 500);
 let isControlEnabled = true;
 let isCheatEnabled = false;
+let isDarkTheme = load("isDarkTheme", true)
 
 document.addEventListener("DOMContentLoaded", function () {
   displayGameMenu()
@@ -21,6 +23,9 @@ document.addEventListener("DOMContentLoaded", function () {
   // openGame(0);
   Slideshow.slide();
   Ticker.start();
+  toggleDarkTheme(isDarkTheme)
+
+  Array.from(navbarMenu.children).forEach(el => el.addEventListener("click", ()=> toggleNavbarMenu(false)))
 });
 
 function displayGameMenu() {
@@ -54,15 +59,6 @@ function updateUI() {
   betDisplay.innerHTML = `Total bet<br />$${currentBet}`;
 
   controlBar.classList.toggle("hidden", !currentGame);
-}
-
-function changeScreen(screenName) {
-  document.querySelectorAll(".screen").forEach((element) => {
-    element.classList.add("hidden");
-  });
-
-  document.querySelector(`.screen.${screenName}`).classList.remove("hidden");
-  toggleNavbarMenu(false);
 }
 
 function goHome() {
@@ -135,6 +131,13 @@ function toggleNavbarMenu(force) {
 function toggleCheat() {
   isCheatEnabled = !isCheatEnabled;
   currentGame.update();
+}
+
+function toggleDarkTheme(force) {
+  isDarkTheme = force != null ? force : !isDarkTheme
+  document.body.classList.toggle("dark-theme", isDarkTheme)
+  document.querySelector(".theme-toggle").innerHTML = isDarkTheme ? `<i class="bi bi-brightness-high"></i>` : `<i class="bi bi-moon"></i>`
+  save("isDarkTheme", isDarkTheme)
 }
 
 const keyActions = {

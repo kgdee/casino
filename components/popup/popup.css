@@ -1,0 +1,25 @@
+
+.popup {
+  pointer-events: none;
+}
+
+.popup img {
+  width: 300px;
+  object-fit: contain;
+  object-position: center;
+}
+
+@keyframes popup {
+  0% {
+    top: 0;
+  }
+  20% {
+    top: 50%;
+  }
+  80% {
+    top: 50%;
+  }
+  100% {
+    top: 100%;
+  }
+}
