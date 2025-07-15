@@ -18,11 +18,17 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="constants.js" defer></script>
     <script src="utils.js" defer></script>
+    <script src="item-db.js" defer></script>
     <script src="components/toast/toast.js" defer></script>
     <script src="components/popup/popup.js" defer></script>
     <script src="components/slideshow/slideshow.js" defer></script>
     <script src="components/ticker/ticker.js" defer></script>
     <script src="components/inventory/inventory.js" defer></script>
+    <script src="components/shop/shop.js" defer></script>
+    <script src="components/item-modal/item-modal.js" defer></script>
+    <script src="components/reward-modal/reward-modal.js" defer></script>
+    <script src="components/dialog/dialog.js" defer></script>
+    <script src="components/coins-popup/coins-popup.js" defer></script>
     <script src="components/laser-game/laser-game.js" defer></script>
     <script src="components/coins-game/coins-game.js" defer></script>
     <script src="components/dice-game/dice-game.js" defer></script>
@@ -41,7 +47,7 @@
           </div>
           <div class="menu m-hidden">
             <button class="icon-btn" onclick="goHome()"><i class="bi bi-house-door"></i></button>
-            <button class="icon-btn"><i class="bi bi-shop-window"></i></button>
+            <button class="icon-btn" onclick="shop.toggle()"><i class="bi bi-shop-window"></i></button>
             <button class="icon-btn" onclick="inventory.toggle()"><i class="bi bi-box-seam"></i></button>
             <button class="icon-btn theme-toggle" onclick="toggleDarkTheme()"><i class="bi bi-moon"></i></button>
           </div>
@@ -119,6 +125,11 @@
         <div class="toast hidden"></div>
 
         <my-inventory></my-inventory>
+        <my-shop></my-shop>
+        <my-item-modal></my-item-modal>
+        <my-reward-modal></my-reward-modal>
+        <my-dialog></my-dialog>
+        <my-coins-popup></my-coins-popup>
       </main>
     </div>
   </body>

@@ -14,12 +14,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url(/images/tile-1.png);
+  background-image: url(../../images/tile-1.png);
   aspect-ratio: 1 / 1;
 }
 
 .dice-game .tilemap .item.prize {
-  background-image: url(/images/tile-2.png);
+  background-image: url(../../images/tile-2.png);
 }
 
 .dice-game .tilemap .item.active {

@@ -1,13 +1,13 @@
 const projectName = "casino"
 
-const itemDB = [
+const gameItems = [
   {
     id: 1,
     name: "Treasure Chest",
     description: "A legendary chest sealed with ancient magic. Only the bravest adventurers will discover the riches within. Rumored to contain items of great power—or great danger.",
     image: "images/item-1.png",
     rarity: 500,
-    effect: "rewards",
+    effect: "loot",
   },
   {
     id: 2,
@@ -125,7 +125,7 @@ const itemDB = [
     id: 18,
     name: "Coin",
     description: "Shiny and satisfying. Currency of the realm, accepted by merchants, mercenaries, and dragons alike.",
-    image: "images/item-17.png",
+    image: "images/item-18.png",
     rarity: 50,
   },
   {
@@ -151,7 +151,7 @@ const itemDB = [
   },
   {
     id: 22,
-    name: "Blue Gem",
+    name: "Diamond",
     description: "Sharp edges, cool to the touch, and glimmering with a frozen light. It seems to pulse in rhythm with silent tides.",
     image: "images/item-22.png",
     rarity: 1000,
@@ -225,6 +225,15 @@ const itemDB = [
     description: "Wrapped in color and tied with luck, this gift could hold anything from coins to crazy bonuses. Dare to unwrap?",
     image: "images/item-32.png",
     rarity: 500,
-    effect: "rewards",
+    effect: "loot",
+  },
+  {
+    id: 35,
+    name: "Cherries Pack",
+    description: "Cherries card pack is your ticket to a world of bluff, luck, and bold strategy. Inside, you'll find rare wild cards, tricked-out high rollers, and risk-it-all game changers. Are you just playing the game, or are you ready to beat the house?",
+    image: "images/item-35.png",
+    rarity: 500,
+    effect: "loot",
+    items: [9, 10, 11, 12],
   },
 ]

@@ -12,7 +12,7 @@
   background-color: black;
   border: 20px solid transparent;
   border-radius: 20px;
-  border-image: url(/images/border-1.png) 30 round;
+  border-image: url(../../images/border-1.png) 30 round;
 }
 
 .laser-game .arrow {
@@ -27,7 +27,7 @@
 .laser-game .arrow .line {
   width: calc(100% - 70px);
   height: 10px;
-  background-image: url(/images/neon-line.png);
+  background-image: url(../../images/neon-line.png);
   background-repeat: repeat;
   border-radius: 50%;
   overflow: hidden;

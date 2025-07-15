@@ -55,13 +55,11 @@ const LaserGame = (() => {
   async function play() {
     if (isPlaying) return;
 
-    if (currentBalance < currentBet) {
-      Toast.show("Not enough balance. Please top up to continue");
-      return;
-    }
-
+    const isPaid = pay(currentBet)
+    if (!isPaid) return
+    
     isPlaying = true;
-    increaseBalance(-currentBet);
+
     const distance = Math.random() * boardHeight;
 
     selectedItem = selectItem(distance);

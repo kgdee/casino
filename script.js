@@ -5,8 +5,8 @@ const playBtn = controlBar.querySelector(".play");
 const messageEl = controlBar.querySelector(".message p");
 const betDisplay = controlBar.querySelector(".bet span");
 const navbarMenu = document.querySelector(".navbar .menu");
-const inventory = document.querySelector("my-inventory")
 
+const itemDB = new ItemDB(gameItems);
 const games = [LaserGame, CoinsGame, DiceGame];
 const timeOuts = { message: null };
 let currentBalance = load("currentBalance", 2000);
@@ -15,31 +15,34 @@ let isPlaying = false;
 let currentBet = load("currentBet", 500);
 let isControlEnabled = true;
 let isCheatEnabled = false;
-let isDarkTheme = load("isDarkTheme", true)
+let isDarkTheme = load("isDarkTheme", true);
+let modalLayer = 0;
 
 document.addEventListener("DOMContentLoaded", function () {
-  displayGameMenu()
+  displayGameMenu();
   updateUI();
   // openGame(0);
-  Slideshow.slide();
-  Ticker.start();
-  toggleDarkTheme(isDarkTheme)
+  // Slideshow.slide();
+  // Ticker.start();
+  toggleDarkTheme(isDarkTheme);
 
-  Array.from(navbarMenu.children).forEach(el => el.addEventListener("click", ()=> toggleNavbarMenu(false)))
+  Array.from(navbarMenu.children).forEach((el) => el.addEventListener("click", () => toggleNavbarMenu(false)));
 });
 
 function displayGameMenu() {
-  gameMenu.innerHTML = games.map(
-    (game, i) => `
+  gameMenu.innerHTML = games
+    .map(
+      (game, i) => `
       <button class="item" onclick="openGame(${i})" style="background-image: url(${game.image})">
         <span class="bottom">${game.name}</span>
       </button>
     `
-  ).join("");
+    )
+    .join("");
 }
 
 function play() {
-  currentGame.play();
+  currentGame?.play();
 }
 
 function restart() {
@@ -47,11 +50,23 @@ function restart() {
 }
 
 function increaseBalance(amount) {
-  currentBalance += Math.floor(amount);
+  amount = Math.floor(amount)
+  currentBalance += amount;
   currentBalance = clamp(currentBalance, 0, 99999);
 
   save("currentBalance", currentBalance);
   updateUI();
+  if (amount > 0) coinsPopup.show(amount)
+}
+
+function pay(amount) {
+  if (currentBalance < amount) {
+    Toast.show("Not enough balance. Please top up to continue");
+    return false;
+  }
+
+  increaseBalance(-amount);
+  return true;
 }
 
 function updateUI() {
@@ -85,12 +100,16 @@ function displayGame() {
   currentGame.restart();
 }
 
-function launchConfetti() {
+function launchConfetti(colorIndex = 0) {
+  const colors = [
+    ["#FFD700", "#FFC700", "#FFB300"],
+    ["#5DADEC", "#1E90FF", "#4682B4"],
+  ];
   confetti({
     particleCount: 150,
     spread: 70,
     origin: { y: 0.6 },
-    colors: ["#FFD700", "#FFC700", "#FFB300"],
+    colors: colors[colorIndex],
   });
 }
 
@@ -130,14 +149,21 @@ function toggleNavbarMenu(force) {
 
 function toggleCheat() {
   isCheatEnabled = !isCheatEnabled;
-  currentGame.update();
+  currentGame?.update();
 }
 
 function toggleDarkTheme(force) {
-  isDarkTheme = force != null ? force : !isDarkTheme
-  document.body.classList.toggle("dark-theme", isDarkTheme)
-  document.querySelector(".theme-toggle").innerHTML = isDarkTheme ? `<i class="bi bi-brightness-high"></i>` : `<i class="bi bi-moon"></i>`
-  save("isDarkTheme", isDarkTheme)
+  isDarkTheme = force != null ? force : !isDarkTheme;
+  document.body.classList.toggle("dark-theme", isDarkTheme);
+  document.querySelector(".theme-toggle").innerHTML = isDarkTheme ? `<i class="bi bi-brightness-high"></i>` : `<i class="bi bi-moon"></i>`;
+  save("isDarkTheme", isDarkTheme);
+}
+
+function handleModalLayer(element) {
+  if (!element) return;
+
+  modalLayer++;
+  element.style.zIndex = modalLayer;
 }
 
 const keyActions = {

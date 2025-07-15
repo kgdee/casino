@@ -11,6 +11,7 @@ const Ticker = (() => {
   ];
 
   const max = 7;
+  const interval = 5;
 
   let currentItem = -1;
 
@@ -30,7 +31,7 @@ const Ticker = (() => {
 
     addItemEl(item)
 
-    await sleep(5000);
+    await sleep(1000 * interval);
 
     update();
   }
