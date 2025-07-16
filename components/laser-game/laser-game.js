@@ -6,7 +6,7 @@ const LaserGame = (() => {
   const arrow = element.querySelector(".arrow");
   const segmentsEl = element.querySelector(".segments");
 
-  const boardHeight = 400;
+  const boardHeight = 300;
   let items = shuffle([
     { multiplier: 0.05, size: 25 },
     { multiplier: 0.05, size: 15 },

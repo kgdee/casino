@@ -18,11 +18,12 @@ class Inventory extends HTMLElement {
 
   render() {
     this.shadowRoot.innerHTML = `
+      <link rel="stylesheet" href="utils.css" />
       <link rel="stylesheet" href="components/inventory/inventory.css" />
       <div class="inventory-modal modal hidden" onclick="inventory.toggle()">
         <div class="modal-content container">
           <span class="title">Inventory</span>
-          <div class="items-container"></div>
+          <div class="slots items-container"></div>
           <div class="actions">
             <button onclick="inventory.sellItems()">Sell all</button>
             <button onclick="shop.toggle(true)">Shop</button>
@@ -73,7 +74,7 @@ class Inventory extends HTMLElement {
       if (this.items.length < this.maxSize) {
         this.items.push({ id: itemId, quantity });
       } else {
-        console.log("Inventory is full!");
+        toast.show("Inventory is full!");
         return;
       }
     }
@@ -108,7 +109,8 @@ class Inventory extends HTMLElement {
         }
       } else {
         const item = itemDB.selectItem(itemData.items);
-        rewards = [item]
+        this.addItem(item.id);
+        rewards = [item];
       }
     }
 

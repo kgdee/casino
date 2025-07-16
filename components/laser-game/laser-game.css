@@ -8,8 +8,9 @@
 
 .laser-game .panel {
   position: relative;
-  width: 400px;
+  width: 300px;
   background-color: black;
+  color: white;
   border: 20px solid transparent;
   border-radius: 20px;
   border-image: url(../../images/border-1.png) 30 round;

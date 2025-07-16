@@ -61,7 +61,7 @@ function increaseBalance(amount) {
 
 function pay(amount) {
   if (currentBalance < amount) {
-    Toast.show("Not enough balance. Please top up to continue");
+    toast.show("Not enough balance. Please top up to continue");
     return false;
   }
 

@@ -11,9 +11,7 @@
     <link rel="stylesheet" href="components/dice-game/dice-game.css" />
     <link rel="stylesheet" href="components/laser-game/laser-game.css" />
     <link rel="stylesheet" href="components/popup/popup.css" />
-    <link rel="stylesheet" href="components/slideshow/slideshow.css" />
     <link rel="stylesheet" href="components/ticker/ticker.css" />
-    <link rel="stylesheet" href="components/toast/toast.css" />
     <!-- canvas-confetti library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="constants.js" defer></script>
@@ -57,13 +55,7 @@
 
       <main class="container">
         <div class="screen home-screen">
-          <!-- <img src="images/logo-l.png" class="logo" /> -->
-          <div class="slideshow">
-            <div class="images"></div>
-
-            <button class="prev" onclick="Slideshow.slide(-1)"><i class="bi bi-caret-left"></i></button>
-            <button class="next" onclick="Slideshow.slide(1)"><i class="bi bi-caret-right"></i></button>
-          </div>
+          <my-slideshow></my-slideshow>
           <div class="ticker"></div>
           <div class="game-menu"></div>
 
@@ -122,7 +114,6 @@
         </div>
 
         <div class="popup overlay hidden"></div>
-        <div class="toast hidden"></div>
 
         <my-inventory></my-inventory>
         <my-shop></my-shop>
@@ -130,6 +121,7 @@
         <my-reward-modal></my-reward-modal>
         <my-dialog></my-dialog>
         <my-coins-popup></my-coins-popup>
+        <my-toast></my-toast>
       </main>
     </div>
   </body>

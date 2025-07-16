@@ -9,6 +9,7 @@
   height: 32px;
   padding: 5px;
   background-image: url(../../images/panel-3.png);
+  color: white;
 }
 
 .coins-game .items {

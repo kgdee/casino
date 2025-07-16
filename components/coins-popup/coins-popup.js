@@ -6,14 +6,13 @@ class CoinsPopup extends HTMLElement {
 
     this.element = null;
 
-    this.itemCount = 0;
-
     this.render();
     globalThis.coinsPopup = this;
   }
 
   render() {
     this.shadowRoot.innerHTML = `
+      <link rel="stylesheet" href="utils.css" />
       <link rel="stylesheet" href="components/coins-popup/coins-popup.css" />
       <div class="coins-popup"></div>
     `;
@@ -22,7 +21,6 @@ class CoinsPopup extends HTMLElement {
   }
 
   async show(balance) {
-    this.itemCount++;
     const move = 200;
     const coins = balance ? clamp(Math.floor(balance / 100), 3, 9) : 3;
     
@@ -54,9 +52,8 @@ class CoinsPopup extends HTMLElement {
     });
 
     await sleep(3000);
-    this.itemCount--;
     itemEl.remove();
-    if (this.itemCount <= 0) this.element.classList.add("hidden");
+    if (this.element.children.length <= 0) this.element.classList.add("hidden");
   }
 }
 

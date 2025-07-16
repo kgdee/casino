@@ -261,6 +261,7 @@ main * {
   height: 100px;
   background-image: url(images/panel-2.png);
   text-align: center;
+  color: white;
 }
 
 .control-bar .controls {

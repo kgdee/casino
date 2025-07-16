@@ -16,6 +16,7 @@ class Dialog extends HTMLElement {
 
   render() {
     this.shadowRoot.innerHTML = `
+      <link rel="stylesheet" href="utils.css" />
       <link rel="stylesheet" href="components/dialog/dialog.css" />
       <div class="dialog-modal modal hidden" onclick="dialog.toggle()">
         <div class="modal-content">

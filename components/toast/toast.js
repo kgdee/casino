@@ -1,32 +1,50 @@
-const Toast = (() => {
-  const element = document.querySelector(".toast");
-  let currentItems = [];
-  const max = 3;
+class Toast extends HTMLElement {
+  constructor() {
+    super();
 
-  function show(message) {
+    this.attachShadow({ mode: "open" });
+
+    this.element = null;
+
+    this.currentItems = [];
+    this.max = 3;
+    this.time = 3;
+
+    this.render();
+    globalThis.toast = this;
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      <link rel="stylesheet" href="utils.css" />
+      <link rel="stylesheet" href="components/toast/toast.css" />
+      <div class="toast hidden"></div>
+    `;
+    this.element = this.shadowRoot.querySelector(".toast")
+  }
+
+  async show(message) {
     if (!message) return;
-    const itemId = generateId();
-    currentItems.push(itemId);
-    element.innerHTML += `
-      <div class="item" data-item="${itemId}">
+    this.element.classList.remove("hidden");
+    const id = generateId();
+
+    this.element.insertAdjacentHTML(
+      "beforeend",
+      `
+      <div data-id="${id}" class="item">
         ${message}
       </div>
-    `;
-    element.classList.remove("hidden");
+    `
+    );
+    const itemEl = this.element.querySelector(`[data-id="${id}"]`);
 
-    if (currentItems.length > max) removeItem(currentItems[0]) 
-    setTimeout(() => {
-      removeItem(itemId);
-    }, 3000);
-  }
+    if (this.element.children.length > this.max) this.element.children[0].remove();
 
-  function removeItem(itemId) {
-    if (!currentItems.includes(itemId)) return
-    const itemEl = element.querySelector(`[data-item="${itemId}"]`);
+    await sleep(1000 * this.time);
+
     itemEl.remove();
-    currentItems = currentItems.filter((item) => item !== itemId);
-    if (currentItems.length <= 0) element.classList.add("hidden");
+    if (this.element.children.length <= 0) this.element.classList.add("hidden");
   }
+}
 
-  return { show };
-})();
+customElements.define("my-toast", Toast);

@@ -72,3 +72,15 @@ function changeScreen(screenName) {
 
   document.querySelector(`.screen.${screenName}`).classList.remove("hidden");
 }
+
+function getTodayDate() {
+  return new Date().toISOString().split("T")[0];
+}
+
+function formatTime(ms) {
+  const hours = String(Math.floor(ms / (1000 * 60 * 60))).padStart(2, "0");
+  const minutes = String(Math.floor((ms / (1000 * 60)) % 60)).padStart(2, "0");
+  const seconds = String(Math.floor((ms / 1000) % 60)).padStart(2, "0");
+
+  return `${hours}:${minutes}:${seconds}`;
+}

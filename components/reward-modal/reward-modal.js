@@ -5,7 +5,7 @@ class RewardModal extends HTMLElement {
     this.attachShadow({ mode: "open" });
 
     this.element = null;
-    this.modalContent = null;
+    this.itemsContainer = null;
 
     this.render();
     globalThis.rewardModal = this;
@@ -13,32 +13,36 @@ class RewardModal extends HTMLElement {
 
   render() {
     this.shadowRoot.innerHTML = `
+      <link rel="stylesheet" href="utils.css" />
       <link rel="stylesheet" href="components/reward-modal/reward-modal.css" />
       <div class="reward-modal modal hidden" onclick="rewardModal.toggle()">
-        <div class="modal-content"></div>
+        <div class="modal-content">
+          <div class="title">You got</div>
+          <div class="slots items-container"></div>
+          <div class="actions">
+            <button onclick="rewardModal.toggle()">Ok</button>   
+          </div>
+          <button class="close-btn" onclick="rewardModal.toggle()"><i class="bi bi-x-lg"></i></button>   
+        </div>
       </div>
     `;
     this.element = this.shadowRoot.querySelector(".reward-modal");
-    this.modalContent = this.element.children[0];
+    this.itemsContainer = this.element.querySelector(".items-container");
   }
 
-  toggle(items = []) {
+  async toggle(items = []) {
     const hasRewards = items.length > 0;
     this.element.classList.toggle("hidden", !hasRewards);
     if (!hasRewards) return;
 
-    this.modalContent.innerHTML = `
-      <div class="title">You got</div>
-      <div class="items items-container">${items.map((item) => this.createItemEl(item, item.quantity)).join("")}</div>
-      <div class="actions">
-        <button onclick="rewardModal.toggle()">Ok</button>   
-      </div>
-      <button class="close-btn" onclick="rewardModal.toggle()"><i class="bi bi-x-lg"></i></button>   
-    `;
-    launchConfetti(1);
-    handleModalLayer(this.element)
+    handleModalLayer(this.element);
+    this.itemsContainer.innerHTML = ""
+    for (let i = 0; i < items.length; i++) {
+      this.itemsContainer.insertAdjacentHTML("beforeend", this.createItemEl(items[i], items[i].quantity));
+      await sleep(250);
+    }
   }
-  
+
   createItemEl(itemData, quantity) {
     return `
       <div class="item" onclick="itemModal.toggle(${itemData.id}, { quantity: ${quantity}, mode: 'manage' })">
@@ -49,4 +53,4 @@ class RewardModal extends HTMLElement {
   }
 }
 
-customElements.define("my-reward-modal", RewardModal)
+customElements.define("my-reward-modal", RewardModal);

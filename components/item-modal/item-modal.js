@@ -17,6 +17,7 @@ class ItemModal extends HTMLElement {
 
   render() {
     this.shadowRoot.innerHTML = `
+      <link rel="stylesheet" href="utils.css" />
       <link rel="stylesheet" href="components/item-modal/item-modal.css" />
       <div class="item-modal modal hidden" onclick="itemModal.toggle()">
         <div class="modal-content"></div>

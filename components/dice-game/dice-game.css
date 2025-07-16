@@ -16,6 +16,7 @@
   justify-content: center;
   background-image: url(../../images/tile-1.png);
   aspect-ratio: 1 / 1;
+  color: white;
 }
 
 .dice-game .tilemap .item.prize {
