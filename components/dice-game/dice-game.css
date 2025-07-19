@@ -7,24 +7,53 @@
   display: grid;
   grid-template-columns: repeat(3, 50px);
   grid-auto-rows: 50px;
-  gap: 2px;
+  transform: rotate(45deg);
 }
 
 .dice-game .tilemap .item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-image: url(../../images/tile-1.png);
+  position: relative;
   aspect-ratio: 1 / 1;
   color: white;
 }
 
-.dice-game .tilemap .item.prize {
-  background-image: url(../../images/tile-2.png);
+.dice-game .tilemap .item .floor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 110%;
+  max-width: revert;
+  aspect-ratio: 1 / 1;
 }
 
-.dice-game .tilemap .item.active {
-  filter: brightness(1.5);
+
+.dice-game .tilemap .item .mark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.dice-game .tilemap .item .prize {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-10%, -10%) rotate(-45deg);
+  width: 80%;
+  aspect-ratio: 1 / 1;
+}
+
+.dice-game .tilemap .item span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url(../../images/chip-3.png);
+  color: var(--blue);
+}
+
+.dice-game .tilemap .item.active .mark {
+  display: inline-block;
 }
 
 .dice-game .dice {

@@ -13,7 +13,8 @@ class Slideshow extends HTMLElement {
     this.intervalId = null;
     this.disabled = false;
 
-    globalThis.slideshow = this;
+    this.ready = this.render();
+    this.instanceKey = globalThisPut(this, "slideshows");
   }
 
   static get observedAttributes() {
@@ -24,19 +25,15 @@ class Slideshow extends HTMLElement {
     this[name] = newValue || newValue !== null;
   }
 
-  connectedCallback() {
-    this.render()
-  }
-
-  render() {
+  async render() {
+    const styleEls = await createStyleEls(["utils.css", "components/slideshow/slideshow.css"])
     this.images = this.images.split(" ");
     this.shadowRoot.innerHTML = `
-      <link rel="stylesheet" href="utils.css" />
-      <link rel="stylesheet" href="components/slideshow/slideshow.css" />
+      ${styleEls}
       <div class="slideshow">
         <div class="images"></div>
-        <button class="prev" onclick="slideshow.slide(-1)"><i class="bi bi-caret-left"></i></button>
-        <button class="next" onclick="slideshow.slide(1)"><i class="bi bi-caret-right"></i></button>
+        <button class="prev" onclick="${this.instanceKey}.slide(-1)"><i class="bi bi-caret-left"></i></button>
+        <button class="next" onclick="${this.instanceKey}.slide(1)"><i class="bi bi-caret-right"></i></button>
       </div>
     `;
     this.element = this.shadowRoot.querySelector(".slideshow");

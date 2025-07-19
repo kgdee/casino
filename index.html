@@ -6,6 +6,7 @@
     <title>Casino</title>
     <link rel="icon" href="favicon.png" type="image/x-icon" />
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="utils.css" />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="components/coins-game/coins-game.css" />
     <link rel="stylesheet" href="components/dice-game/dice-game.css" />
@@ -30,87 +31,28 @@
     <script src="components/laser-game/laser-game.js" defer></script>
     <script src="components/coins-game/coins-game.js" defer></script>
     <script src="components/dice-game/dice-game.js" defer></script>
+    <script src="components/navbar/navbar.js" defer></script>
+    <script src="components/control-bar/control-bar.js" defer></script>
     <script src="script.js" defer></script>
   </head>
   <body>
     <div class="app">
-      <nav class="navbar">
-        <div class="content container">
-          <img class="logo" src="images/logo.png" onclick="goHome()" />
-          <div class="balance center">
-            <img src="images/chip.png" />
-            <span>2000</span>
-            <button class="button" onclick="increaseBalance(2000)"><i class="bi bi-plus-lg"></i></button>
-            <button class="button" onclick="increaseBalance(-2000)"><i class="bi bi-dash-lg"></i></button>
-          </div>
-          <div class="menu m-hidden">
-            <button class="icon-btn" onclick="goHome()"><i class="bi bi-house-door"></i></button>
-            <button class="icon-btn" onclick="shop.toggle()"><i class="bi bi-shop-window"></i></button>
-            <button class="icon-btn" onclick="inventory.toggle()"><i class="bi bi-box-seam"></i></button>
-            <button class="icon-btn theme-toggle" onclick="toggleDarkTheme()"><i class="bi bi-moon"></i></button>
-          </div>
-          <button class="hamburger icon-btn hidden" onclick="toggleNavbarMenu()"><i class="bi bi-list"></i></button>
-        </div>
-      </nav>
-
+      <my-navbar></my-navbar>
       <main class="container">
         <div class="screen home-screen">
           <my-slideshow></my-slideshow>
           <div class="ticker"></div>
           <div class="game-menu"></div>
 
-          <img src="images/background-3.jpg" class="info-img">
+          <img src="images/background-3.jpg" class="cta">
         </div>
 
         <div class="screen game-screen hidden">
-          <div class="game coins-game flex-center hidden">
-            <div class="panel">
-              <div class="multiplier flex-center"></div>
-              <div class="items"></div>
-            </div>
-          </div>
+          <div class="game laser-game hidden"></div>
+          <div class="game coins-game flex-center hidden"></div>
+          <div class="game dice-game hidden"></div>
 
-          <div class="game laser-game hidden">
-            <div class="panel">
-              <div class="arrow flexbox">
-                <div class="line"></div>
-                <img src="images/diamond-2.png" class="left" />
-                <img src="images/diamond-2.png" class="right" />
-              </div>
-              <div class="segments"></div>
-            </div>
-          </div>
-
-          <div class="game dice-game hidden">
-            <div class="panel">
-              <div class="board">
-                <div class="tilemap"></div>
-                <div class="dice-container center"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="control-bar hidden">
-            <div class="message"><p>GOOD LUCK</p></div>
-            <div class="controls">
-              <div class="bet">
-                <button class="button" onclick="increaseBet(-500)">
-                  <i class="bi bi-dash-lg"></i>
-                </button>
-                <span
-                  >Total bet<br />
-                  500</span
-                >
-                <button class="button" onclick="increaseBet(500)">
-                  <i class="bi bi-plus-lg"></i>
-                </button>
-              </div>
-              <button class="button play" onclick="play()">Play</button>
-              <button class="button restart" onclick="restart()">
-                <i class="bi bi-arrow-counterclockwise"></i>
-              </button>
-            </div>
-          </div>
+          <my-control-bar></my-control-bar>
         </div>
 
         <div class="popup overlay hidden"></div>

@@ -6,6 +6,8 @@ class CoinsPopup extends HTMLElement {
 
     this.element = null;
 
+    this.max = 10;
+
     this.render();
     globalThis.coinsPopup = this;
   }
@@ -21,6 +23,8 @@ class CoinsPopup extends HTMLElement {
   }
 
   async show(balance) {
+    if (this.element.children.length >= this.max) return
+
     const move = 200;
     const coins = balance ? clamp(Math.floor(balance / 100), 3, 9) : 3;
     

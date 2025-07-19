@@ -1,0 +1,21 @@
+<div class="shop-modal modal hidden" onclick="shop.toggle()">
+  <div class="modal-content container">
+    <span class="title">Shop <span class="countdown"></span></span>
+    <div class="content">
+      <my-slideshow images="banner-4.jpg banner-5.jpg banner-6.jpg"></my-slideshow>
+      <div data-menu="1" class="menu">
+        <span class="title">Today’s Top Deals</span>
+        <div class="items-container"></div>
+      </div>
+      <div data-menu="2" class="menu">
+        <span class="title">Daily Picks</span>
+        <div class="items-container"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button onclick="shop.refresh()">$100 Refresh</button>
+      <button onclick="inventory.toggle(true)">Inventory</button>
+    </div>
+    <button class="close-btn icon-btn" onclick="shop.toggle()"><i class="bi bi-x-lg"></i></button>
+  </div>
+</div>

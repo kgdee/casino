@@ -8,44 +8,24 @@ class Shop extends HTMLElement {
     this.itemsContainer = null;
     this.countdown = null;
 
-    this.items = [
+    this.initialItems = [
       { itemId: 32, quantity: 5, discount: 50, dailyLimit: 10 },
       { itemId: 35, quantity: 5, discount: 50, dailyLimit: 5 },
       { itemId: 1, quantity: 5, discount: 50, dailyLimit: 2 },
     ];
-
-    this.dailyData = load("shopDailyData", {});
+    this.items = [];
     this.purchases = load("purchases", []);
 
-    this.render();
+    this.ready = this.render();
     globalThis.shop = this;
   }
 
-  render() {
+  async render() {
+    const styleEls = await createStyleEls(["utils.css", "components/shop/shop.css"]);
+    const html = await fetchText("components/shop/shop.html");
     this.shadowRoot.innerHTML = `
-      <link rel="stylesheet" href="utils.css" />
-      <link rel="stylesheet" href="components/shop/shop.css" />
-      <div class="shop-modal modal hidden" onclick="shop.toggle()">
-        <div class="modal-content container">
-          <span class="title">Shop <span class="countdown"></span></span>
-          <div class="content">
-            <my-slideshow images="banner-4.jpg banner-5.jpg banner-6.jpg"></my-slideshow>
-            <div data-menu="1" class="menu">
-              <span class="title">Today’s Top Deals</span>
-              <div class="items-container"></div>
-            </div>
-            <div data-menu="2" class="menu">
-              <span class="title">Daily Picks</span>
-              <div class="items-container"></div>
-            </div>
-          </div>
-          <div class="actions">
-            <button onclick="shop.resetLimit()">Force refresh</button>
-            <button onclick="inventory.toggle(true)">Inventory</button>
-          </div>
-          <button class="close-btn" onclick="shop.toggle()"><i class="bi bi-x-lg"></i></button>
-        </div>
-      </div>
+      ${styleEls}
+      ${html}
     `;
 
     this.element = this.shadowRoot.querySelector(".shop-modal");
@@ -62,8 +42,9 @@ class Shop extends HTMLElement {
   }
 
   update() {
-    this.items = this.getTodayItems();
     const hasItems = this.items.length > 0;
+    this.items = this.getDailyItems();
+
     this.displayItems(
       this.itemsContainers[0],
       this.items.filter((item) => item.discount != null).sort((a, b) => b.discount - a.discount)
@@ -77,14 +58,14 @@ class Shop extends HTMLElement {
 
   displayItems(itemsEl, items) {
     const hasItems = this.items.length > 0;
-    itemsEl.innerHTML = hasItems ? items.map((item) => this.createItemEl(itemDB.getItemData(item.itemId), { ...item })).join("") : `<span class="message">No items</span>`;
+    itemsEl.innerHTML = hasItems ? items.map((item) => this.createItemEl({ ...itemDB.getItem(item.itemId), ...item })).join("") : `<span class="message">No items</span>`;
   }
 
-  createItemEl(itemData, { quantity = 1, discount, dailyLimit } = {}) {
-    const purchase = this.purchases.find((p) => p.itemId === itemData.id);
-    const purchasedCount = purchase?.count || 0;
-    
-    const normalPrice = itemData.price * quantity;
+  createItemEl(item) {
+    const { quantity = 1, discount, dailyLimit } = item;
+    const purchase = this.getPurchase(item.id);
+
+    const normalPrice = item.price * quantity;
     let buttonContent = `$${normalPrice}`;
     if (discount) {
       const discountPrice = normalPrice - normalPrice * (discount / 100);
@@ -92,43 +73,45 @@ class Shop extends HTMLElement {
     }
 
     return `
-      <div class="item${discount ? " discount" : ""}" onclick="shop.buy(${itemData.id}, ${quantity})">
-        <span class="name truncated">${itemData.name}</span>
+      <div class="item${discount ? " discount" : ""}" onclick="shop.buy(${item.id}, ${quantity})">
+        <span class="name truncated">${item.name}</span>
         <div class="image">
-          <img src="${itemData.image}" />
+          <img src="${item.image}" />
           ${quantity > 1 ? `<span class="quantity">x${quantity}</span>` : ""}
-          ${discount ? `<div class="badge">${discount}%</div>` : ""}
+          ${discount ? `<div class="badge">-${discount}%</div>` : ""}
           </div>
         <div class="footer">
-          ${dailyLimit ? `<span class="limit">Daily: ${purchasedCount}/${dailyLimit}</span>` : ""}
+          ${dailyLimit ? `<span class="limit">Daily: ${purchase.count}/${dailyLimit}</span>` : ""}
           <button>${buttonContent}</button>
         </div>
       </div>
     `;
   }
 
-  getTodayItems() {
+  getDailyItems() {
     const today = getTodayDate();
-    if (this.dailyData.date !== today) {
-      this.addMoreItems();
-      this.dailyData = { date: today, items: this.items };
-      save("shopDailyData", this.dailyData);
+    let dailyItems = load("dailyItems", {});
+    if (dailyItems.date !== today) {
+      const items = this.initialItems.concat(this.getItems());
+      dailyItems = { date: today, items: items };
+      save("dailyItems", dailyItems);
     }
-    return this.dailyData.items;
+    return dailyItems.items;
   }
 
   async buy(itemId, quantity) {
-    const itemData = itemDB.getItemData(itemId);
+    const itemData = itemDB.getItem(itemId);
     if (!itemData) return;
+    
     const isAccepted = await itemModal.toggle(itemData.id, { quantity: quantity, mode: "shop" });
     if (!isAccepted) return;
-    const item = this.items.find((item) => item.itemId === itemId);
-
-    const withinLimit = this.handleLimit(item);
-    if (!withinLimit) return;
-
+    
     const ispaid = pay(itemData.price * quantity);
     if (!ispaid) return;
+    
+    const item = this.items.find((item) => item.itemId === itemId);
+    const withinLimit = this.handleLimit(item);
+    if (!withinLimit) return;
 
     inventory.addItem(itemId, quantity);
 
@@ -162,9 +145,13 @@ class Shop extends HTMLElement {
     save("purchases", this.purchases);
   }
 
-  async resetLimit() {
-    const isAccepted = await dialog.toggle({ title: "Force refresh", message: "Are you sure you want to force refresh?" });
+  async refresh() {
+    const isAccepted = await dialog.toggle({ title: "Refresh", message: "Are you sure you want to refresh?" });
     if (!isAccepted) return;
+    const isPaid = pay(100);
+    if (!isPaid) return;
+
+    save("dailyItems", {});
     save("purchases", []);
     this.purchases = [];
     this.update();
@@ -181,19 +168,21 @@ class Shop extends HTMLElement {
     this.updateCountdown();
   }
 
-  addMoreItems() {
+  getItems() {
     let items = [];
     const start = Math.floor(Math.random() * 10);
     const end = start + 20;
     for (let i = start; i < end; i++) {
       let item = { itemId: itemDB.items[i].id, quantity: 1 };
-      if (i < start + 2) item.discount = 10;
-      else if (i < start + 4) item.discount = 5;
       items.push(item);
     }
     items = shuffle(items);
 
-    this.items = this.items.concat(items);
+    for (let i = 0; i < 4; i++) {
+      items[i].discount = i <= 2 ? 10 : 5;
+    }
+
+    return items;
   }
 }
 

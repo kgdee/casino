@@ -1,0 +1,81 @@
+.control-bar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.control-bar button {
+  background-color: transparent;
+}
+
+.control-bar button:active {
+  filter: brightness(1.5);
+}
+
+.control-bar .message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 100px;
+  background-image: url(../../images/panel-2.png);
+  text-align: center;
+  color: white;
+}
+
+.control-bar .controls {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.control-bar .bet {
+  display: flex;
+  gap: 5px;
+}
+
+.control-bar .bet button {
+  flex-shrink: 0;
+  background-color: transparent;
+  color: white;
+  width: 32px;
+  aspect-ratio: 1 / 1;
+  background-image: url(../../images/button-4.png);
+  padding: 0;
+}
+
+.control-bar .bet span {
+  min-width: 80px;
+}
+
+.control-bar .controls > button {
+  height: 32px;
+  width: auto;
+}
+
+.control-bar .play {
+  width: 100px;
+  aspect-ratio: 215 / 79;
+  background-image: url(../../images/button-1.png);
+}
+
+.control-bar .restart {
+  aspect-ratio: 1 / 1;
+  background-image: url(../../images/button-6.png);
+}
+
+@keyframes message {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

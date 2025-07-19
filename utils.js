@@ -24,6 +24,10 @@ function load(key, defaultValue) {
   return JSON.parse(savedValue);
 }
 
+function removeSaveData(key) {
+  localStorage.removeItem(`${projectName}_${key}`);
+}
+
 function generateId() {
   return Math.random().toString(36).slice(2, 11);
 }
@@ -83,4 +87,31 @@ function formatTime(ms) {
   const seconds = String(Math.floor((ms / 1000) % 60)).padStart(2, "0");
 
   return `${hours}:${minutes}:${seconds}`;
+}
+
+function getRandomItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function globalThisPut(instance, name) {
+  globalThis[name] = globalThis[name] ? [...globalThis[name], instance] : [instance];
+  const index = globalThis[name].length - 1;
+  const instanceKey = `${name}[${index}]`;
+  return instanceKey;
+}
+
+async function fetchText(url) {
+  const response = await fetch(url);
+  const text = await response.text();
+  return text;
+}
+
+async function fetchTexts(urls) {
+  return Promise.all(urls.map((url) => fetch(url).then((res) => res.text())));
+}
+
+async function createStyleEls(urls) {
+  const cssTexts = await fetchTexts(urls);
+  const styleEls = cssTexts.map((cssText) => `<style>${cssText}</style>`).join("\n");
+  return styleEls;
 }

@@ -1,10 +1,9 @@
 const CoinsGame = (() => {
-  const name = "COINS"
-  const image = "images/game-2.png"
+  const name = "COINS";
+  const image = "images/game-2.png";
   const element = document.querySelector(".coins-game");
-  const panel = element.querySelector(".panel");
-  const itemsEl = element.querySelector(".items");
-  const multiplierEl = element.querySelector(".multiplier");
+  let itemsEl = null;
+  let multiplierEl = null;
 
   let currentItems = [];
   let openedItems = [];
@@ -17,6 +16,18 @@ const CoinsGame = (() => {
   function getItems() {
     const items = shuffle([...Array.from({ length: 8 }, () => getRandomNumber(1, 5)), 0]);
     return items;
+  }
+
+  function render() {
+    element.innerHTML = `
+      <div class="panel">
+        <div class="multiplier flex-center"></div>
+        <div class="items"></div>
+      </div>
+    `;
+
+    itemsEl = element.querySelector(".items");
+    multiplierEl = element.querySelector(".multiplier");
   }
 
   function update() {
@@ -34,13 +45,11 @@ const CoinsGame = (() => {
       })
       .join("");
 
-    playBtn.innerHTML = isPlaying ? "End" : "Play";
-
-    handleAnimation(openedItems[openedItems.length - 1]);
+    controlBar.playBtn.innerHTML = isPlaying ? "End" : "Play";
     multiplierEl.innerHTML = `${getMultiplier()}x`;
   }
 
-  function handleAnimation(itemIndex) {
+  function animateItem(itemIndex) {
     const item = currentItems[itemIndex];
     if (item == null) return;
     const itemEl = itemsEl.querySelector(`.item[data-index="${itemIndex}"]`);
@@ -65,8 +74,13 @@ const CoinsGame = (() => {
 
   function openItem(index) {
     if (isLoading) return;
+    if (isFinished) {
+      restart();
+      return;
+    }
     if (!isPlaying) play();
-    if (openedItems.includes(index) || isFinished) return;
+
+    if (openedItems.includes(index)) return;
 
     openedItems.push(index);
 
@@ -78,22 +92,24 @@ const CoinsGame = (() => {
       finalize();
     } else {
       update();
-      displayMessage(`Total rewards<br />$${totalRewards}`);
+      controlBar.displayMessage(`Total rewards<br />$${totalRewards}`);
     }
+
+    animateItem(index);
   }
 
   async function reveal() {
     isLoading = true;
-    await sleep(3000)
+    await sleep(3000);
     for (let i = 0; i < currentItems.length; i++) {
-      if (openedItems.includes(i)) continue
+      if (openedItems.includes(i)) continue;
 
-      handleAnimation(i);
+      animateItem(i);
 
-      await sleep(500)
+      await sleep(500);
     }
 
-    isLoading = false
+    isLoading = false;
   }
 
   function play() {
@@ -110,8 +126,8 @@ const CoinsGame = (() => {
       return;
     }
 
-    const isPaid = pay(currentBet)
-    if (!isPaid) return
+    const isPaid = pay(currentBet);
+    if (!isPaid) return;
 
     restart();
     isPlaying = true;
@@ -126,6 +142,7 @@ const CoinsGame = (() => {
     isPlaying = false;
     totalRewards = 0;
     isFinished = false;
+    render()
     update();
   }
 
@@ -136,14 +153,25 @@ const CoinsGame = (() => {
     if (!isLost()) {
       increaseBalance(totalRewards);
       Popup.show(getMultiplier());
-      displayMessage(`YOU WON $${totalRewards}`);
+      controlBar.displayMessage(`YOU WON $${totalRewards}`);
     } else {
-      displayMessage("GAME OVER");
+      controlBar.displayMessage("GAME OVER");
     }
 
     update();
     reveal();
   }
 
-  return { name, image, element, play, update, openItem, restart };
+  return {
+    name,
+    image,
+    element,
+    get isPlaying() {
+      return isPlaying;
+    },
+    play,
+    update,
+    openItem,
+    restart,
+  };
 })();

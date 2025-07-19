@@ -10,17 +10,17 @@ class Toast extends HTMLElement {
     this.max = 3;
     this.time = 3;
 
-    this.render();
+    this.ready = this.render();
     globalThis.toast = this;
   }
 
-  render() {
+  async render() {
+    const styleEls = await createStyleEls(["utils.css", "components/toast/toast.css"]);
     this.shadowRoot.innerHTML = `
-      <link rel="stylesheet" href="utils.css" />
-      <link rel="stylesheet" href="components/toast/toast.css" />
+      ${styleEls}
       <div class="toast hidden"></div>
     `;
-    this.element = this.shadowRoot.querySelector(".toast")
+    this.element = this.shadowRoot.querySelector(".toast");
   }
 
   async show(message) {

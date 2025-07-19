@@ -11,11 +11,20 @@ class ItemDB {
     ];
   }
 
-  getItemData(itemId) {
+  getItem(itemId) {
     let itemData = this.items.find((item) => item.id === itemId);
     if (!itemData) return null;
     itemData = { ...itemData, price: itemData.rarity * 2 };
     return itemData;
+  }
+
+  getItems(refs) {
+    // Build a Set of IDs for fast lookup
+    const idSet = new Set(refs.map((ref) => ref.id));
+
+    // Filter items by checking if id is in the Set
+    const result = this.items.filter((item) => idSet.has(item.id));
+    return result
   }
 
   getTier() {
@@ -30,7 +39,7 @@ class ItemDB {
     }
   }
 
-  getItem([min, max] = []) {
+  getItemByRarity([min, max] = []) {
     const items = this.items.filter((item) => item.rarity <= max && item.rarity >= min);
     const item = items[Math.floor(Math.random() * items.length)];
     return item;
@@ -38,13 +47,13 @@ class ItemDB {
 
   pullGacha() {
     const tier = this.getTier();
-    const item = this.getItem(tier.range);
+    const item = this.getItemByRarity(tier.range);
     return item;
   }
 
   selectItem(itemIds) {
     const itemId = itemIds[Math.floor(Math.random() * itemIds.length)];
-    const item = this.getItemData(itemId);
+    const item = this.getItem(itemId);
     return item;
   }
 

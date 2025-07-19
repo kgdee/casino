@@ -1,10 +1,9 @@
 const LaserGame = (() => {
-  const name = "LASER"
-  const image = "images/game-1.png"
+  const name = "LASER";
+  const image = "images/game-1.png";
   const element = document.querySelector(".laser-game");
-  const panel = element.querySelector(".panel");
-  const arrow = element.querySelector(".arrow");
-  const segmentsEl = element.querySelector(".segments");
+  let arrow = null;
+  let segmentsEl = null;
 
   const boardHeight = 300;
   let items = shuffle([
@@ -22,6 +21,21 @@ const LaserGame = (() => {
   const animationTime = 5;
 
   let selectedItem = -1;
+
+  function render() {
+    element.innerHTML = `
+      <div class="panel">
+        <div class="arrow flexbox">
+          <div class="line"></div>
+          <img src="images/diamond-2.png" class="left" />
+          <img src="images/diamond-2.png" class="right" />
+        </div>
+        <div class="segments"></div>
+      </div>
+    `;
+    arrow = element.querySelector(".arrow");
+    segmentsEl = element.querySelector(".segments");
+  }
 
   function shuffleItems() {
     items = shuffle(items);
@@ -55,9 +69,9 @@ const LaserGame = (() => {
   async function play() {
     if (isPlaying) return;
 
-    const isPaid = pay(currentBet)
-    if (!isPaid) return
-    
+    const isPaid = pay(currentBet);
+    if (!isPaid) return;
+
     isPlaying = true;
 
     const distance = Math.random() * boardHeight;
@@ -100,15 +114,26 @@ const LaserGame = (() => {
     isPlaying = false;
     update();
     Popup.show(items[selectedItem].multiplier);
-    displayMessage(`YOU WON $${getSegmentPrize(selectedItem)}`);
+    controlBar.displayMessage(`YOU WON $${getSegmentPrize(selectedItem)}`);
   }
 
   function restart() {
     if (isPlaying) return;
     selectedItem = -1;
     shuffleItems();
+    render()
     update();
   }
 
-  return { name, image, element, update, play, restart };
+  return {
+    name,
+    image,
+    element,
+    get isPlaying() {
+      return isPlaying;
+    },
+    update,
+    play,
+    restart,
+  };
 })();

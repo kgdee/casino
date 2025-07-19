@@ -7,14 +7,14 @@ class RewardModal extends HTMLElement {
     this.element = null;
     this.itemsContainer = null;
 
-    this.render();
+    this.ready = this.render();
     globalThis.rewardModal = this;
   }
 
-  render() {
+  async render() {
+    const styleEls = await createStyleEls(["utils.css", "components/reward-modal/reward-modal.css"])
     this.shadowRoot.innerHTML = `
-      <link rel="stylesheet" href="utils.css" />
-      <link rel="stylesheet" href="components/reward-modal/reward-modal.css" />
+      ${styleEls}
       <div class="reward-modal modal hidden" onclick="rewardModal.toggle()">
         <div class="modal-content">
           <div class="title">You got</div>
@@ -22,12 +22,13 @@ class RewardModal extends HTMLElement {
           <div class="actions">
             <button onclick="rewardModal.toggle()">Ok</button>   
           </div>
-          <button class="close-btn" onclick="rewardModal.toggle()"><i class="bi bi-x-lg"></i></button>   
+          <button class="close-btn icon-btn" onclick="rewardModal.toggle()"><i class="bi bi-x-lg"></i></button>   
         </div>
       </div>
     `;
     this.element = this.shadowRoot.querySelector(".reward-modal");
     this.itemsContainer = this.element.querySelector(".items-container");
+    this.shadowRoot.querySelectorAll(".modal > *").forEach((el) => el.addEventListener("click", (event) => event.stopPropagation()));
   }
 
   async toggle(items = []) {

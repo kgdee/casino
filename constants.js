@@ -1,4 +1,11 @@
-const projectName = "casino"
+const projectName = "casino";
+
+const confettiColors = [
+  ["#FFD700", "#FFC700", "#FFB300"], // Gold tones
+  ["#5DADEC", "#1E90FF", "#4682B4"], // Blues
+  ["#FF7F50", "#FF6347", "#FF4500"], // Warm coral & red-orange tones
+  ["#98FB98", "#90EE90", "#32CD32"], // Light greens
+];
 
 const gameItems = [
   {
@@ -230,10 +237,11 @@ const gameItems = [
   {
     id: 35,
     name: "Cherries Pack",
-    description: "Cherries card pack is your ticket to a world of bluff, luck, and bold strategy. Inside, you'll find rare wild cards, tricked-out high rollers, and risk-it-all game changers. Are you just playing the game, or are you ready to beat the house?",
+    description:
+      "Cherries card pack is your ticket to a world of bluff, luck, and bold strategy. Inside, you'll find rare wild cards, tricked-out high rollers, and risk-it-all game changers. Are you just playing the game, or are you ready to beat the house?",
     image: "images/item-35.png",
     rarity: 500,
     effect: "loot",
     items: [9, 10, 11, 12],
   },
-]
+];

@@ -5,8 +5,6 @@
 
 .popup img {
   width: 300px;
-  object-fit: contain;
-  object-position: center;
 }
 
 @keyframes popup {

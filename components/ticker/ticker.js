@@ -2,7 +2,7 @@ const Ticker = (() => {
   const element = document.querySelector(".ticker");
 
   const items = [
-    { game: 0, amount: "$32", user: "Rui***" },
+    { game: 0, amount: "$32", user: "Vel***" },
     { game: 1, amount: "$10", user: "Rui***" },
     { game: 2, amount: "$201", user: "Ene***" },
     { game: 0, amount: "$50", user: "Sto***" },

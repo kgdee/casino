@@ -2,7 +2,6 @@ class Inventory extends HTMLElement {
   constructor() {
     super();
 
-    // Create shadow root
     this.attachShadow({ mode: "open" });
 
     this.element = null;
@@ -12,14 +11,14 @@ class Inventory extends HTMLElement {
     this.maxSize = 50;
     this.currentSize = 0;
 
-    this.render();
+    this.ready = this.render();
     globalThis.inventory = this;
   }
 
-  render() {
+  async render() {
+    const styleEls = await createStyleEls(["utils.css", "components/inventory/inventory.css"]);
     this.shadowRoot.innerHTML = `
-      <link rel="stylesheet" href="utils.css" />
-      <link rel="stylesheet" href="components/inventory/inventory.css" />
+      ${styleEls}
       <div class="inventory-modal modal hidden" onclick="inventory.toggle()">
         <div class="modal-content container">
           <span class="title">Inventory</span>
@@ -28,7 +27,7 @@ class Inventory extends HTMLElement {
             <button onclick="inventory.sellItems()">Sell all</button>
             <button onclick="shop.toggle(true)">Shop</button>
           </div>
-          <button class="close-btn" onclick="inventory.toggle()"><i class="bi bi-x-lg"></i></button>
+          <button class="close-btn icon-btn" onclick="inventory.toggle()"><i class="bi bi-x-lg"></i></button>
         </div>
       </div>
     `;
@@ -44,17 +43,35 @@ class Inventory extends HTMLElement {
 
   update() {
     const hasItems = this.items.length > 0;
-    this.itemsContainer.innerHTML = hasItems ? this.items.map((item) => this.createItemEl(itemDB.getItemData(item.id), item.quantity)).join("") : `<span class="message">Your inventory is currently empty</span>`;
+    this.itemsContainer.innerHTML = hasItems ? this.createItemEls() : `<span class="message">Your inventory is currently empty</span>`;
     this.itemsContainer.style.flex = hasItems ? null : "1";
   }
 
-  createItemEl(itemData, quantity) {
-    return `
-      <div class="item" onclick="itemModal.toggle(${itemData.id}, { quantity: ${quantity}, mode: 'manage' })">
-        <img src="${itemData.image}" />
-        ${quantity ? `<span>${quantity}</span>` : ""}
+  getItemsMap() {
+    return Object.fromEntries(this.items.map(item => [item.id, item]));
+  }
+
+  createItemEls() {
+    let itemsMap = this.getItemsMap()
+    let items = itemDB.getItems(this.items);
+    items = items.map((item) => ({
+      ...item,
+      ...itemsMap[item.id],
+    }));
+    items.sort((a, b) => a.name.localeCompare(b.name));
+
+    const itemsEls = items
+      .map(
+        (item) => `
+      <div class="item" onclick="itemModal.toggle(${item.id}, { quantity: ${item.quantity}, mode: 'manage' })">
+        <img src="${item.image}" />
+        ${item.quantity ? `<span>${item.quantity}</span>` : ""}
       </div>
-    `;
+    `
+      )
+      .join("");
+
+    return itemsEls;
   }
 
   toggle(force) {
@@ -64,7 +81,7 @@ class Inventory extends HTMLElement {
   }
 
   addItem(itemId, quantity = 1) {
-    const itemData = itemDB.getItemData(itemId);
+    const itemData = itemDB.getItem(itemId);
     if (!itemData) return;
 
     const existing = this.items.find((item) => item.id === itemId);
@@ -87,14 +104,13 @@ class Inventory extends HTMLElement {
 
     if (quantity > item.quantity) quantity = item.quantity;
     item.quantity -= quantity;
-
     if (item.quantity <= 0) this.items = this.items.filter((item) => item.id !== itemId);
 
     save("inventoryItems", this.items);
   }
 
   useItem(itemId) {
-    const itemData = itemDB.getItemData(itemId);
+    const itemData = itemDB.getItem(itemId);
     if (!itemData) return;
 
     this.removeItem(itemId);
@@ -125,7 +141,7 @@ class Inventory extends HTMLElement {
     if (!item) return;
 
     this.removeItem(itemId, quantity);
-    const itemData = itemDB.getItemData(itemId);
+    const itemData = itemDB.getItem(itemId);
     increaseBalance(itemData.price * quantity);
 
     itemModal.toggle();
@@ -142,5 +158,4 @@ class Inventory extends HTMLElement {
   }
 }
 
-// Register the element
 customElements.define("my-inventory", Inventory);

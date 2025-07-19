@@ -10,14 +10,14 @@ class Dialog extends HTMLElement {
     this.onCancel = () => {}
     this.onAccept = () => {}
 
-    this.render();
+    this.ready = this.render();
     globalThis.dialog = this;
   }
 
-  render() {
+  async render() {
+    const styleEls = await createStyleEls(["utils.css", "components/dialog/dialog.css"])
     this.shadowRoot.innerHTML = `
-      <link rel="stylesheet" href="utils.css" />
-      <link rel="stylesheet" href="components/dialog/dialog.css" />
+      ${styleEls}
       <div class="dialog-modal modal hidden" onclick="dialog.toggle()">
         <div class="modal-content">
           <span class="title"></span>
@@ -26,7 +26,7 @@ class Dialog extends HTMLElement {
             <button class="confirm" onclick="dialog.onAccept()">Yes</button>
             <button class="cancel" onclick="dialog.toggle()">No</button>
           </div>
-          <button class="close-btn" onclick="dialog.toggle()"><i class="bi bi-x-lg"></i></button>   
+          <button class="close-btn icon-btn" onclick="dialog.toggle()"><i class="bi bi-x-lg"></i></button>   
         </div>
       </div>
     `;

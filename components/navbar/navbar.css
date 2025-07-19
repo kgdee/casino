@@ -1,0 +1,72 @@
+
+.navbar {
+  padding: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.75);
+}
+
+.navbar .content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar .logo {
+  height: 32px;
+  cursor: pointer;
+}
+
+.navbar .balance {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px;
+}
+
+.navbar .balance img {
+  width: 32px;
+  aspect-ratio: 1 / 1;
+}
+
+.navbar .balance span {
+  min-width: 55px;
+}
+
+.navbar .balance button {
+  width: 32px;
+  background-image: none;
+  background-color: var(--lightblue);
+  aspect-ratio: 1 / 1;
+  padding: 0;
+}
+
+.navbar .menu {
+  display: flex;
+  gap: 25px;
+}
+
+/* Medium screens (Tablets, up to 768px wide) */
+@media (max-width: 768px) {
+  .m-hidden {
+    display: none !important;
+  }
+
+  .navbar .menu {
+    position: absolute;
+    top: calc(100% + 20px);
+    right: 0;
+    z-index: 1;
+    flex-direction: column;
+    background-color: var(--label-color);
+    padding: 10px;
+  }
+
+  .navbar .hamburger {
+    display: inline-block !important;
+  }
+}
+
+/* Small screens (Phones, up to 480px wide) */
+@media (max-width: 480px) {
+}

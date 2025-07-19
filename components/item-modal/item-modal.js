@@ -11,14 +11,14 @@ class ItemModal extends HTMLElement {
     this.mode = null;
     this.onCancel = () => {};
 
-    this.render();
+    this.ready = this.render();
     globalThis.itemModal = this;
   }
 
-  render() {
+  async render() {
+    const styleEls = await createStyleEls(["utils.css", "components/item-modal/item-modal.css"])
     this.shadowRoot.innerHTML = `
-      <link rel="stylesheet" href="utils.css" />
-      <link rel="stylesheet" href="components/item-modal/item-modal.css" />
+      ${styleEls}
       <div class="item-modal modal hidden" onclick="itemModal.toggle()">
         <div class="modal-content"></div>
       </div>
@@ -30,7 +30,7 @@ class ItemModal extends HTMLElement {
 
   async toggle(itemId, { quantity = null, mode = null } = {}) {
     this.onCancel();
-    this.itemData = itemDB.getItemData(itemId);
+    this.itemData = itemDB.getItem(itemId);
     const itemData = this.itemData
     this.element.classList.toggle("hidden", !itemData);
     if (!itemData) return;
@@ -48,7 +48,7 @@ class ItemModal extends HTMLElement {
       </div>
       <div class="description">${itemData.description}</div>
       <div class="actions"></div>
-      <button class="close-btn" onclick="itemModal.toggle()"><i class="bi bi-x-lg"></i></button>
+      <button class="close-btn icon-btn" onclick="itemModal.toggle()"><i class="bi bi-x-lg"></i></button>
     `;
 
     handleModalLayer(this.element)

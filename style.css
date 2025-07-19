@@ -1,133 +1,7 @@
-/*==================== Google Fonts ====================*/
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
-/*==================== Bootstrap Icons ====================*/
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css");
-
-:root {
-  --bg-color: #ffffff;
-  --text-color: #333;
-  --border-color: rgba(0, 0, 0, 0.5);
-  --label-color: #eee;
-  --red: #f44336;
-  --green: #4caf50;
-  --blue: #3f51b5;
-  --lightblue: #2196f3;
-  --gold: linear-gradient(90deg, #f9d976, #f39c12, #b8860b);
-}
-
-.dark-theme {
-  --bg-color: #222;
-  --text-color: #eee;
-  --border-color: rgba(255, 255, 255, 0.5);
-  --label-color: #333;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-  border: none;
-  text-decoration: none;
-  line-height: 1;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  font-weight: bold;
-}
-
-img {
-  -webkit-user-drag: none;
-}
-
-button {
-  cursor: pointer;
-}
-
-button:disabled {
-  opacity: 0.75;
-}
-
-.button {
-  display: inline-block;
-  background-color: transparent;
-  color: white;
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
-  width: 100px;
-  aspect-ratio: 215 / 79;
-  background-image: url(images/button-1.png);
-}
-
-.icon-btn {
-  background-color: transparent;
-  color: var(--text-color);
-  font-size: 1.5rem;
-}
-
-.truncated {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.left {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-}
-
-.right {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-}
-
-.bottom {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 body {
   font-family: "Poppins", sans-serif;
   background-color: var(--bg-color);
   color: var(--text-color);
-}
-
-.container {
-  max-width: 960px;
-  margin: auto;
 }
 
 .app {
@@ -140,60 +14,11 @@ body {
   flex-direction: column;
 }
 
-.navbar {
-  padding: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.75);
-}
-
-.navbar .content {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.navbar .logo {
-  height: 32px;
-  cursor: pointer;
-}
-
-.navbar .balance {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 5px;
-}
-
-.navbar .balance img {
-  width: 32px;
-  aspect-ratio: 1 / 1;
-}
-
-.navbar .balance span {
-  min-width: 55px;
-}
-
-.navbar .balance button {
-  width: 32px;
-  background-image: none;
-  background-color: var(--lightblue);
-  aspect-ratio: 1 / 1;
-}
-
-.navbar .menu {
-  display: flex;
-  gap: 25px;
-}
 
 main {
   display: flex;
   width: 100%;
   flex: 1;
-}
-
-main * {
-  max-width: 100%;
 }
 
 .screen {
@@ -235,106 +60,16 @@ main * {
   padding: 5px;
 }
 
-.home-screen .info-img {
+.home-screen .cta {
   width: 100%;
   max-height: 300px;
   aspect-ratio: 2 / 1;
   object-fit: cover;
 }
 
-.control-bar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-.control-bar button:active {
-  filter: brightness(1.5);
-}
-
-.control-bar .message {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 200px;
-  height: 100px;
-  background-image: url(images/panel-2.png);
-  text-align: center;
-  color: white;
-}
-
-.control-bar .controls {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-align: center;
-}
-
-.control-bar .bet {
-  display: flex;
-  gap: 5px;
-}
-
-.control-bar .bet button {
-  flex-shrink: 0;
-  background-color: transparent;
-  color: white;
-  width: 32px;
-  aspect-ratio: 1 / 1;
-  background-image: url(images/button-4.png);
-}
-
-.control-bar .bet span {
-  min-width: 80px;
-}
-
-.control-bar .controls > button {
-  height: 32px;
-  width: auto;
-}
-
-.control-bar .play {
-  aspect-ratio: 215 / 79;
-}
-
-.control-bar .restart {
-  aspect-ratio: 1 / 1;
-  background-image: url(images/button-6.png);
-}
-
-@keyframes message {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
 /* Medium screens (Tablets, up to 768px wide) */
 @media (max-width: 768px) {
-  .m-hidden {
-    display: none !important;
-  }
 
-  .navbar .menu {
-    position: absolute;
-    top: calc(100% + 20px);
-    right: 0;
-    z-index: 1;
-    flex-direction: column;
-    background-color: var(--label-color);
-    padding: 10px;
-  }
-
-  .navbar .hamburger {
-    display: inline-block !important;
-  }
 }
 
 /* Small screens (Phones, up to 480px wide) */
