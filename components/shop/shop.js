@@ -179,7 +179,7 @@ class Shop extends HTMLElement {
     items = shuffle(items);
 
     for (let i = 0; i < 4; i++) {
-      items[i].discount = i <= 2 ? 10 : 5;
+      items[i].discount = i < 2 ? 10 : 5;
     }
 
     return items;

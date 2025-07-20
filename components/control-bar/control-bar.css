@@ -20,7 +20,7 @@
   justify-content: center;
   width: 200px;
   height: 100px;
-  background-image: url(../../images/panel-2.png);
+  background-image: url(images/panel-2.png);
   text-align: center;
   color: white;
 }
@@ -44,7 +44,7 @@
   color: white;
   width: 32px;
   aspect-ratio: 1 / 1;
-  background-image: url(../../images/button-4.png);
+  background-image: url(images/button-4.png);
   padding: 0;
 }
 
@@ -60,12 +60,12 @@
 .control-bar .play {
   width: 100px;
   aspect-ratio: 215 / 79;
-  background-image: url(../../images/button-1.png);
+  background-image: url(images/button-1.png);
 }
 
 .control-bar .restart {
   aspect-ratio: 1 / 1;
-  background-image: url(../../images/button-6.png);
+  background-image: url(images/button-6.png);
 }
 
 @keyframes message {

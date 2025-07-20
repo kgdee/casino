@@ -1,7 +1,7 @@
 const gameMenu = document.querySelector(".game-menu");
 
 const itemDB = new ItemDB(gameItems);
-const games = [LaserGame, CoinsGame, DiceGame];
+const games = [ScratchGame, LaserGame, CoinsGame, DiceGame];
 const timeOuts = { message: null };
 let currentBalance = load("currentBalance", 2000);
 let currentGame = null;
@@ -14,13 +14,13 @@ let modalLayer = 0;
 
 document.addEventListener("DOMContentLoaded", async function () {
   displayGameMenu();
-  // openGame(2);
   Ticker.start();
   
   await navbar.ready
   await controlBar.ready
   toggleDarkTheme(isDarkTheme);
   updateUI();
+  openGame(0);
 });
 
 function displayGameMenu() {
@@ -120,7 +120,7 @@ function increaseBet(amount) {
 
 function toggleCheat() {
   isCheatEnabled = !isCheatEnabled;
-  currentGame.update();
+  currentGame?.toggleCheat();
 }
 
 function toggleDarkTheme(force) {
