@@ -1,13 +1,16 @@
 const Ticker = (() => {
   const element = document.querySelector(".ticker");
+  const itemsEl = element.querySelector(".items")
 
   const items = [
-    { game: 0, amount: "$32", user: "Vel***" },
-    { game: 1, amount: "$10", user: "Rui***" },
-    { game: 2, amount: "$201", user: "Ene***" },
-    { game: 0, amount: "$50", user: "Sto***" },
-    { game: 1, amount: "$100", user: "Mos***" },
-    { game: 2, amount: "$29", user: "Kii***" },
+    { game: 0, amount: "$32", user: "Ste***" },
+    { game: 1, amount: "$10", user: "Mar***" },
+    { game: 2, amount: "$201", user: "Arc***" },
+    { game: 3, amount: "$50", user: "Wel***" },
+    { game: 0, amount: "$100", user: "Cla***" },
+    { game: 1, amount: "$29", user: "Fir***" },
+    { game: 2, amount: "$12", user: "Gep***" },
+    { game: 3, amount: "$85", user: "Bla***" },
   ];
 
   const max = 7;
@@ -22,8 +25,8 @@ const Ticker = (() => {
   }
 
   async function update() {
-    if (element.children.length >= max) {
-      element.children[0].remove();
+    if (itemsEl.children.length >= max) {
+      itemsEl.children[0].remove();
     }
 
     currentItem = (currentItem + 1) % items.length;
@@ -37,7 +40,7 @@ const Ticker = (() => {
   }
 
   function addItemEl(item) {
-    element.innerHTML += `
+    itemsEl.innerHTML += `
       <div class="item">
         <img src="${games[item.game].image}" />
         <div class="details">

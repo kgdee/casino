@@ -1,17 +1,34 @@
 
 .ticker {
+  display: flex;
+  gap: 5px;
+}
+
+.ticker .title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 50px;
+  font-size: 0.8rem;
+  word-break: break-all;
+  border: 5px solid transparent;
+  border-radius: 5px;
+  border-image: url(../../images/border-1.png) 30 round;
+}
+
+.ticker .items {
+  flex: 1;
   overflow: hidden;
   display: flex;
   gap: 10px;
-  width: 100%;
 }
 
-.ticker * {
+.ticker .items * {
   font-weight: normal;
   font-size: 0.8rem;
 }
 
-.ticker .item {
+.ticker .items .item {
   flex-shrink: 0;
   display: flex;
   gap: 5px;
@@ -24,13 +41,13 @@
   animation: ticker-item 1s ease-in-out forwards;
 }
 
-.ticker .item .details {
+.ticker .items .item .details {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.ticker .item .details .amount {
+.ticker .items .item .details .amount {
   font-weight: bold;
   font-size: 1rem;
 }

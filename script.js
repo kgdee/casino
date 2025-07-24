@@ -15,28 +15,28 @@ let modalLayer = 0;
 document.addEventListener("DOMContentLoaded", async function () {
   displayGameMenu();
   Ticker.start();
-  
-  await navbar.ready
-  await controlBar.ready
+
+  await navbar.ready;
+  await controlBar.ready;
   toggleDarkTheme(isDarkTheme);
   updateUI();
   openGame(0);
 });
 
 function displayGameMenu() {
-  gameMenu.innerHTML = games
+  gameMenu.querySelector(".items").innerHTML = games
     .map(
       (game, i) => `
-      <button class="item" onclick="openGame(${i})" style="background-image: url(${game.image})">
+      <div class="item" onclick="openGame(${i})" style="background-image: url(${game.image})">
         <span class="bottom">${game.name}</span>
-      </button>
+      </div>
     `
     )
     .join("");
 }
 
 function play() {
-  if (!currentGame) return
+  if (!currentGame) return;
   currentGame.play();
 }
 
@@ -65,8 +65,8 @@ function pay(amount) {
 }
 
 function updateUI() {
-  navbar.update()
-  controlBar.update()
+  navbar.update();
+  controlBar.update();
   controlBar.toggle(currentGame);
 }
 
@@ -126,7 +126,7 @@ function toggleCheat() {
 function toggleDarkTheme(force) {
   isDarkTheme = force != null ? force : !isDarkTheme;
   document.body.classList.toggle("dark-theme", isDarkTheme);
-  navbar.update()
+  navbar.update();
   save("isDarkTheme", isDarkTheme);
 }
 
@@ -135,6 +135,14 @@ function handleModalLayer(element) {
 
   modalLayer++;
   element.style.zIndex = modalLayer;
+}
+
+async function getBonus(itemId) {
+  const item = itemDB.getItem(itemId);
+  inventory.addItem(item.id);
+
+  await sleep(1000)
+  rewardModal.toggle([item]);
 }
 
 const keyActions = {

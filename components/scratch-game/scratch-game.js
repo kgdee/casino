@@ -1,12 +1,15 @@
 const ScratchGame = (() => {
   const name = "SCRATCH";
-  const image = "images/game-2.png";
+  const image = "images/scratch-game.png";
   const element = document.querySelector(".scratch-game");
   let itemsEl = null;
   let multiplierEl = null;
 
-  const effects = [{ name: "2", type: "multiplier", value: 2 }];
-
+  const initialItems = [
+    { name: "2", type: "multiplier", value: 2 },
+    { name: "5", type: "multiplier", value: 5 },
+    { name: "7", type: "multiplier", value: 7, image: "images/7.png" },
+  ];
   let currentItems = [];
   let openedItems = [];
   let currentMatches = [];
@@ -16,53 +19,85 @@ const ScratchGame = (() => {
   let isLoading = false;
   const isLost = () => openedItems.some((itemIndex) => currentItems[itemIndex].type === "penalty");
 
-  function getItems() {
-    const items = shuffle([...Array.from({ length: 15 }, () => ({ type: "prize", effect: getEffect() })), { type: "penalty", effect: { name: "P" } }]);
-    return items;
-  }
+  function setupItems() {
+    let items = initialItems;
+    items = Array.from({ length: 15 }, () => getRandomItem(items));
 
-  function getEffect() {
-    const index = Math.floor(Math.random() * effects.length);
-    const effect = effects[index];
-    return effect;
+    items = items.concat([
+      { type: "penalty", image: "images/bomb.png" },
+      { type: "bonus", value: 32 },
+      { type: "bonus", value: 35 },
+      { type: "bonus", value: itemDB.getItemByRarity([50, 500]).id },
+      { type: "bonus", value: itemDB.getItemByRarity([50, 500]).id },
+    ]);
+
+    currentItems = shuffle(items);
   }
 
   function render() {
     element.innerHTML = `
       <div class="panel">
-        <div class="multiplier flex-center"></div>
+        <div class="title">
+          <img src="images/scratch-logo.png" />
+          <span>
+            WIN UP<br />
+            TO 100X
+          </span>
+        </div>
+        <div class="brand sticker">
+          <img src="images/logo.png" />
+        </div>
+        <div class="multiplier sticker flex-center"></div>
         <div class="items"></div>
       </div>
     `;
 
     itemsEl = element.querySelector(".items");
+    itemsEl.style = "grid-template-columns: repeat(5, 50px);";
     multiplierEl = element.querySelector(".multiplier");
   }
 
   function displayItems() {
-    itemsEl.innerHTML = currentItems.map((item) => createItemEl(item)).join("");
+    itemsEl.innerHTML = currentItems.map((item, i) => createItemEl(item, i)).join("");
   }
 
   function update() {
+    Array.from(itemsEl.children).forEach((el, i) => {
+      const matched = currentMatches.some((match) => match.includes(i));
+      const revealed = openedItems.includes(i);
+
+      el.classList.toggle("revealed", revealed);
+      el.classList.toggle("matched", matched);
+    });
+
     controlBar.playBtn.innerHTML = isPlaying ? "End" : "Play";
     multiplierEl.innerHTML = `${getTotalMultiplier()}x`;
   }
 
   function toggleCheat() {
-    currentItems.forEach((item, i) => revealItem(i))
+    currentItems.forEach((item, i) => revealItem(i, isCheatEnabled));
   }
 
-  function createItemEl(item) {
-    const index = currentItems.indexOf(item);
-    const bonusItem = item.effect.type === "bonus" ? itemDB.getItem(item.effect.value) : null;
-    const shouldReveal = openedItems.includes(index) ? "reveal" : ""
+  function createItemEl(item, index) {
+    const shouldReveal = openedItems.includes(index);
+    let content = "";
+
+    if (item.type === "bonus") {
+      const bonusItem = itemDB.getItem(item.value);
+      content = `<img class="content center" src="${bonusItem.image}" />`;
+    } else if (item.image) {
+      content = `<img class="content center" src="${item.image}" />`;
+    } else {
+      content = `<span class="content flex-center center">${item.name}</span>`;
+    }
 
     return `
-        <div class="item ${shouldReveal}" onclick="ScratchGame.openItem(${index})">
-          ${bonusItem ? `<img src="${bonusItem.image}" />` : `<span class="flex-center">${item.effect.name}</span>`}
-          <img class="tile-img" src="images/scratch-tile.png" />
-          <img class="mark-img" src="images/scratch-mark.png" />
-          <img class="anim-img" src="images/scratch.gif?id=${Math.random()}" />
+        <div class="item ${shouldReveal ? "reveal" : ""}" onclick="ScratchGame.openItem(${index})">
+        ${content}
+        <div class="coat flex-center">
+          <img src="images/scratch-coat.png" />
+        </div>
+        <div class="mark"></div>
         </div>
       `;
   }
@@ -70,19 +105,20 @@ const ScratchGame = (() => {
   function getTotalMultiplier() {
     let multiplier = 0;
     if (!isLost() && openedItems.length > 0) {
-      multiplier = currentMatches.reduce((sum, item) => (sum + item.effect.value), 0)
+      const items = getItemsByMatches();
+      multiplier = items.reduce((sum, item) => sum + item.value, 0);
     }
     return multiplier;
   }
 
   function handleTotalRewards() {
-    let rewards = 0
+    let rewards = 0;
     if (openedItems.length > 0 && !isLost()) {
-      const multiplier = getTotalMultiplier()
-      rewards = currentBet * multiplier
+      const multiplier = getTotalMultiplier();
+      rewards = currentBet * multiplier;
     }
 
-    totalRewards = rewards
+    totalRewards = rewards;
   }
 
   async function openItem(index) {
@@ -97,9 +133,7 @@ const ScratchGame = (() => {
 
     openedItems.push(index);
 
-    currentMatches = getMatches();
-    console.log("matches: ", currentMatches);
-
+    handleMatches();
     handleTotalRewards();
 
     isFinished = openedItems.length >= currentItems.length;
@@ -107,11 +141,12 @@ const ScratchGame = (() => {
     if (isLost() || isFinished) {
       finalize();
     } else {
+      const item = currentItems[index]
+      if (item.type === "bonus") getBonus(item.value)
       controlBar.displayMessage(`Total rewards<br />$${totalRewards}`);
     }
 
-    revealItem(index);
-    update()
+    update();
   }
 
   async function reveal() {
@@ -122,15 +157,17 @@ const ScratchGame = (() => {
 
       revealItem(i, true);
 
-      await sleep(500);
+      await sleep(250);
     }
 
     isLoading = false;
   }
 
   function revealItem(itemIndex, force) {
-    const itemEl = itemsEl.children[itemIndex]
-    itemEl.classList.toggle("reveal", force)
+    force = force || openedItems.includes(itemIndex);
+
+    const itemEl = itemsEl.children[itemIndex];
+    itemEl.classList.toggle("revealed", force);
   }
 
   function play() {
@@ -143,7 +180,6 @@ const ScratchGame = (() => {
 
     if (isFinished) {
       restart();
-      play();
       return;
     }
 
@@ -151,19 +187,23 @@ const ScratchGame = (() => {
     if (!isPaid) return;
 
     isPlaying = true;
+    update()
   }
 
   function restart() {
     if (isPlaying || isLoading) return;
 
-    currentItems = getItems();
+    setupItems();
 
     openedItems = [];
+    currentMatches = [];
     isPlaying = false;
     totalRewards = 0;
     isFinished = false;
+    
     render();
     displayItems();
+    update()
   }
 
   function finalize() {
@@ -178,12 +218,13 @@ const ScratchGame = (() => {
       controlBar.displayMessage("GAME OVER");
     }
 
+    update();
     reveal();
   }
 
-  function getMatches() {
+  function handleMatches() {
     const items = currentItems;
-    const sizeX = 4;
+    const sizeX = 5;
     const sizeY = Math.floor(items.length / sizeX);
     const matchLength = 3;
 
@@ -194,10 +235,10 @@ const ScratchGame = (() => {
       [1, -1], // ↙
     ];
 
-    const matches = [];
+    const matches = []; // store groups of matching indexes
 
     function isMatchable(item, index) {
-      return item?.effect?.type === "multiplier" && openedItems.includes(index);
+      return item?.type === "multiplier" && openedItems.includes(index);
     }
 
     for (let i = 0; i < items.length; i++) {
@@ -215,7 +256,7 @@ const ScratchGame = (() => {
           const nIndex = ny * sizeX + nx;
           const nItem = items[nIndex];
           if (!isMatchable(nItem, nIndex)) break;
-          if (nItem.effect.name !== item.effect.name) break;
+          if (nItem.name !== item.name) break;
 
           chain.push([nx, ny]);
           nx += dx;
@@ -223,12 +264,18 @@ const ScratchGame = (() => {
         }
 
         if (chain.length >= matchLength) {
-          matches.push(item); // One representative per match
+          const match = chain.map(([cx, cy]) => cy * sizeX + cx);
+          matches.push(match); // collect group of matching indexes
         }
       }
     }
 
-    return matches;
+    currentMatches = matches;
+  }
+
+  function getItemsByMatches() {
+    const items = currentMatches.map((match) => currentItems[match[0]]); // One representative per match
+    return items;
   }
 
   return {

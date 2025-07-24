@@ -1,6 +1,6 @@
 const LaserGame = (() => {
   const name = "LASER";
-  const image = "images/game-1.png";
+  const image = "images/laser-game.png";
   const element = document.querySelector(".laser-game");
   let arrow = null;
   let segmentsEl = null;

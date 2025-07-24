@@ -1,6 +1,6 @@
 const CoinsGame = (() => {
   const name = "COINS";
-  const image = "images/game-2.png";
+  const image = "images/coins-game.png";
   const element = document.querySelector(".coins-game");
   let itemsEl = null;
   let multiplierEl = null;

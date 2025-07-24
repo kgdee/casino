@@ -1,6 +1,6 @@
 const DiceGame = (() => {
   const name = "DICE";
-  const image = "images/game-3.png";
+  const image = "images/dice-game.png";
   const element = document.querySelector(".dice-game");
   let tilemap = null;
   let diceContainer = null;
@@ -161,10 +161,9 @@ const DiceGame = (() => {
       Popup.show(multiplier);
       controlBar.displayMessage(`YOU WON $${rewards}`);
     } else if (prize.itemBonus) {
-      const item = itemDB.getItem(prize.itemBonus);
-      inventory.addItem(item.id);
+      getBonus(prize.itemBonus)
+      const item = itemDB.getItem(prize.itemBonus)
       controlBar.displayMessage(`You got ${item.name}`);
-      rewardModal.toggle([item]);
     }
   }
 

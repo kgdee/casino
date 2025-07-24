@@ -1,43 +1,97 @@
-
 .scratch-game .panel {
+  position: relative;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 10px;
+  background: linear-gradient(to top, #d20b12, #881103);
+  border: 2px solid;
+  border-image: linear-gradient(to bottom, gold, white, gold) 1;
+  padding: 10px;
+}
+
+.scratch-game .sticker {
+  position: absolute;
+  top: 0;
+  width: 28px;
+  height: 32px;
+  padding: 5px;
+  background-color: white;
+  color: black;
+}
+
+.scratch-game .panel .title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.scratch-game .panel .title img {
+  width: 80px;
+}
+
+.scratch-game .panel .brand {
+  left: 0;
+  border-bottom-right-radius: 8px;
+}
+
+.scratch-game .panel .brand img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
 }
 
 .scratch-game .multiplier {
-  height: 32px;
-  padding: 5px;
-  background-image: url(../../images/panel-3.png);
-  color: white;
+  right: 0;
+  border-bottom-left-radius: 8px;
 }
 
 .scratch-game .items {
   display: grid;
-  grid-template-columns: repeat(4, 50px);
   grid-auto-rows: 50px;
-  gap: 5px;
+  border: 2px solid;
+  border-image: linear-gradient(to bottom, salmon, white, salmon) 1;
 }
 
 .scratch-game .item {
   position: relative;
   cursor: default;
-}
-
-.scratch-game .item.reveal .tile-img {
-  display: none;
-}
-
-.scratch-game .item.reveal .mark-img {
-  display: inline-block;
-}
-
-.scratch-game .item.reveal .anim-img {
-  display: inline-block;
+  background-color: wheat;
+  color: #333;
 }
 
 .scratch-game .item > * {
   position: absolute;
   width: 100%;
   height: 100%;
+}
+
+.scratch-game .item .mark {
+  visibility: hidden;
+  border: 2px solid white;
+}
+
+.scratch-game .item .content {
+  visibility: hidden;
+  width: 70%;
+  height: 70%;
+  font-size: 1.2rem;
+}
+
+.scratch-game .item .coat {
+  background-color: #d20b12;
+  padding: 5px;
+}
+
+.scratch-game .item.revealed .content {
+  visibility: visible;
+}
+
+.scratch-game .item.revealed .coat {
+  mask-image: url(../../images/scratch-mask-2.png);
+  mask-size: cover;
+}
+
+.scratch-game .item.matched .mark {
+  visibility: visible;
 }

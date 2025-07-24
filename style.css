@@ -37,20 +37,23 @@ main {
 
 .home-screen .game-menu {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 400px;
+  padding: 10px 0;
+}
+
+.home-screen .game-menu .items {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 10px;
-  width: 400px;
-  padding: 20px 0;
 }
 
 .home-screen .game-menu .item {
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
-  background-color: transparent;
-  background-size: cover;
-  background-position: center;
 }
 
 .home-screen .game-menu .item span {
