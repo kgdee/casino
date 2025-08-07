@@ -8,12 +8,6 @@ function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
-function blink(element) {
-  element.classList.add("hidden");
-
-  setTimeout(() => element.classList.remove("hidden"), 100);
-}
-
 function save(key, value) {
   localStorage.setItem(`${projectName}_${key}`, JSON.stringify(value));
 }
@@ -89,7 +83,7 @@ function formatTime(ms) {
   return `${hours}:${minutes}:${seconds}`;
 }
 
-function getRandomItem(arr) {
+function getArrayItem(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
@@ -106,12 +100,11 @@ async function fetchText(url) {
   return text;
 }
 
-async function fetchTexts(urls) {
-  return Promise.all(urls.map((url) => fetch(url).then((res) => res.text())));
-}
-
 async function createStyleEls(urls) {
-  const cssTexts = await fetchTexts(urls);
-  const styleEls = cssTexts.map((cssText) => `<style>${cssText}</style>`).join("\n");
+  let styleEls = ""
+  for (const url of urls) {
+    const cssText = await fetchText(url)
+    styleEls += `<style>${cssText}</style>\n`
+  }
   return styleEls;
 }

@@ -1,7 +1,7 @@
 const gameMenu = document.querySelector(".game-menu");
 
 const itemDB = new ItemDB(gameItems);
-const games = [ScratchGame, LaserGame, CoinsGame, DiceGame];
+const games = [WheelGame, ScratchGame, LaserGame, CoinsGame, DiceGame];
 const timeOuts = { message: null };
 let currentBalance = load("currentBalance", 2000);
 let currentGame = null;
@@ -95,7 +95,7 @@ function displayGame() {
 }
 
 function launchConfetti() {
-  const color = getRandomItem(confettiColors);
+  const color = getArrayItem(confettiColors);
   confetti({
     particleCount: 150,
     spread: 70,

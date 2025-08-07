@@ -1,0 +1,50 @@
+.wheel-game .wrapper {
+  position: relative;
+}
+
+.wheel-game .arrow {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -10px);
+  z-index: 1;
+  width: 40px;
+}
+
+.wheel-game .wheel {
+  position: relative;
+  width: 300px;
+  aspect-ratio: 1 / 1;
+}
+
+.wheel-game .wheel > * {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  aspect-ratio: 1 / 1;
+}
+
+.wheel-game .wheel-img {
+  width: 100%;
+}
+
+.wheel-game .items {
+  width: 70%;
+}
+
+.wheel-game .items .item {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+}
+
+.wheel-game .items .item > * {
+  width: 50px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}

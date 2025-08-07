@@ -21,7 +21,7 @@ const ScratchGame = (() => {
 
   function setupItems() {
     let items = initialItems;
-    items = Array.from({ length: 15 }, () => getRandomItem(items));
+    items = Array.from({ length: 15 }, () => getArrayItem(items));
 
     items = items.concat([
       { type: "penalty", image: "images/bomb.png" },
@@ -39,10 +39,7 @@ const ScratchGame = (() => {
       <div class="panel">
         <div class="title">
           <img src="images/scratch-logo.png" />
-          <span>
-            WIN UP<br />
-            TO 100X
-          </span>
+          <span>MATCH NUMBERS TO WIN</span>
         </div>
         <div class="brand sticker">
           <img src="images/logo.png" />
