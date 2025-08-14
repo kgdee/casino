@@ -8,11 +8,12 @@
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
     <link rel="stylesheet" href="utils.css" />
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="components/scratch-game/scratch-game.css" />
-    <link rel="stylesheet" href="components/coins-game/coins-game.css" />
-    <link rel="stylesheet" href="components/dice-game/dice-game.css" />
-    <link rel="stylesheet" href="components/laser-game/laser-game.css" />
-    <link rel="stylesheet" href="components/wheel-game/wheel-game.css" />
+    <link rel="stylesheet" href="games/scratch-game/scratch-game.css" />
+    <link rel="stylesheet" href="games/coins-game/coins-game.css" />
+    <link rel="stylesheet" href="games/dice-game/dice-game.css" />
+    <link rel="stylesheet" href="games/laser-game/laser-game.css" />
+    <link rel="stylesheet" href="games/wheel-game/wheel-game.css" />
+    <link rel="stylesheet" href="games/slot-game/slot-game.css" />
     <link rel="stylesheet" href="components/popup/popup.css" />
     <link rel="stylesheet" href="components/ticker/ticker.css" />
     <!-- canvas-confetti library -->
@@ -30,11 +31,12 @@
     <script src="components/reward-modal/reward-modal.js" defer></script>
     <script src="components/dialog/dialog.js" defer></script>
     <script src="components/coins-popup/coins-popup.js" defer></script>
-    <script src="components/laser-game/laser-game.js" defer></script>
-    <script src="components/scratch-game/scratch-game.js" defer></script>
-    <script src="components/coins-game/coins-game.js" defer></script>
-    <script src="components/dice-game/dice-game.js" defer></script>
-    <script src="components/wheel-game/wheel-game.js" defer></script>
+    <script src="games/laser-game/laser-game.js" defer></script>
+    <script src="games/scratch-game/scratch-game.js" defer></script>
+    <script src="games/coins-game/coins-game.js" defer></script>
+    <script src="games/dice-game/dice-game.js" defer></script>
+    <script src="games/wheel-game/wheel-game.js" defer></script>
+    <script src="games/slot-game/slot-game.js" defer></script>
     <script src="components/navbar/navbar.js" defer></script>
     <script src="components/control-bar/control-bar.js" defer></script>
     <script src="script.js" defer></script>
@@ -45,12 +47,7 @@
       <main class="container">
         <div class="screen home-screen">
           <my-slideshow></my-slideshow>
-          <div class="ticker">
-            <div class="title flex-center">
-              <span>NEWS</span>
-            </div>
-            <div class="items"></div>
-          </div>
+          <div class="ticker"></div>
           <div class="game-menu">
             <h2><i class="bi bi-fire" style="color: red;"></i> Top Games</h2>
             <div class="items"></div>
@@ -65,6 +62,7 @@
           <div class="game coins-game flex-center hidden"></div>
           <div class="game dice-game hidden"></div>
           <div class="game wheel-game hidden"></div>
+          <div class="game slot-game hidden"></div>
 
           <my-control-bar></my-control-bar>
         </div>

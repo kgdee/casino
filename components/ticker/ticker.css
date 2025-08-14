@@ -5,22 +5,18 @@
 }
 
 .ticker .title {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  width: 50px;
-  font-size: 0.8rem;
-  word-break: break-all;
-  border: 5px solid transparent;
+  padding: 5px;
+  background-color: var(--label-color);
   border-radius: 5px;
-  border-image: url(../../images/border-1.png) 30 round;
+}
+
+.ticker .items-outer {
+  overflow: hidden;
 }
 
 .ticker .items {
   flex: 1;
-  overflow: hidden;
   display: flex;
-  gap: 10px;
 }
 
 .ticker .items * {
@@ -38,7 +34,6 @@
   background-color: var(--label-color);
   padding: 5px;
   border-radius: 5px;
-  animation: ticker-item 1s ease-in-out forwards;
 }
 
 .ticker .items .item .details {
@@ -50,13 +45,4 @@
 .ticker .items .item .details .amount {
   font-weight: bold;
   font-size: 1rem;
-}
-
-@keyframes ticker-item {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(calc(-100% + -10px));
-  }
 }

@@ -47,6 +47,18 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function nextFrame() {
+  return new Promise(resolve => requestAnimationFrame(resolve));
+}
+
+function getRandomIndex(arr) {
+  return Math.floor(Math.random() * arr.length)
+}
+
+function getArrayItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -55,12 +67,12 @@ function shuffle(array) {
   return array;
 }
 
-function getRandomNumber(min, max) {
+function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function cycle(n, range) {
-  return ((n % range) + range) % range;
+function cycleIndex(index, length) {
+  return ((index % length) + length) % length;
 }
 
 function changeScreen(screenName) {
@@ -83,10 +95,6 @@ function formatTime(ms) {
   return `${hours}:${minutes}:${seconds}`;
 }
 
-function getArrayItem(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
 function globalThisPut(instance, name) {
   globalThis[name] = globalThis[name] ? [...globalThis[name], instance] : [instance];
   const index = globalThis[name].length - 1;
@@ -101,10 +109,10 @@ async function fetchText(url) {
 }
 
 async function createStyleEls(urls) {
-  let styleEls = ""
+  let styleEls = "";
   for (const url of urls) {
-    const cssText = await fetchText(url)
-    styleEls += `<style>${cssText}</style>\n`
+    const cssText = await fetchText(url);
+    styleEls += `<style>${cssText}</style>\n`;
   }
   return styleEls;
 }

@@ -1,6 +1,4 @@
-const LaserGame = (() => {
-  const name = "LASER";
-  const image = "images/laser-game.png";
+const LaserGame = () => {
   const element = document.querySelector(".laser-game");
   let arrow = null;
   let segmentsEl = null;
@@ -126,8 +124,6 @@ const LaserGame = (() => {
   }
 
   return {
-    name,
-    image,
     element,
     get isPlaying() {
       return isPlaying;
@@ -136,4 +132,4 @@ const LaserGame = (() => {
     play,
     restart,
   };
-})();
+}

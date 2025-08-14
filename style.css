@@ -54,6 +54,7 @@ main {
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
+  cursor: pointer;
 }
 
 .home-screen .game-menu .item span {

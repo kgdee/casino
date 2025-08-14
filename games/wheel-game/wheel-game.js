@@ -1,11 +1,9 @@
-const WheelGame = (() => {
-  const name = "WHEEL";
-  const image = "images/wheel-game.png";
+const WheelGame = () => {
   const element = document.querySelector(".wheel-game");
   let wheelEl = null;
   let itemsEl = null;
 
-  const initialItems = [
+  const initialPrizes = [
     { type: "multiplier", value: 2 },
     { type: "multiplier", value: 5 },
     { type: "bonus", value: 32 },
@@ -14,16 +12,16 @@ const WheelGame = (() => {
   const segmentSize = 45;
   const time = 3;
 
-  let currentItems = [];
+  let currentPrizes = [];
   let isLoading = false;
   let isPlaying = false;
   let currentRotation = 0;
 
-  function setupItems() {
-    const bonusItems = Array.from({ length: 2 }, () => ({ type: "bonus", value: itemDB.getItemByRarity([50, 500]).id }));
-    const items = initialItems.concat(bonusItems);
+  function setupPrizes() {
+    const bonusItems = Array.from({ length: 5 }, () => ({ type: "bonus", value: itemDB.getItemByRarity([50, 500]).id }));
+    const prizes = initialPrizes.concat(bonusItems);
 
-    currentItems = shuffle(items);
+    currentPrizes = shuffle(prizes);
   }
 
   function render() {
@@ -42,17 +40,17 @@ const WheelGame = (() => {
   }
 
   function update() {
-    itemsEl.innerHTML = currentItems.map((item, i) => createItemEl(item, i)).join("");
+    itemsEl.innerHTML = currentPrizes.map((prize, i) => createItemEl(prize, i)).join("");
   }
 
-  function createItemEl(item, index) {
+  function createItemEl(prize, index) {
     let content = "";
 
-    if (item.type === "bonus") {
-      const bonusItem = itemDB.getItem(item.value);
+    if (prize.type === "bonus") {
+      const bonusItem = itemDB.getItem(prize.value);
       content = `<img src="${bonusItem.image}" />`;
     } else {
-      content = `<span>x${item.value}</span>`;
+      content = `<span>x${prize.value}</span>`;
     }
 
     const rotation = segmentSize * index * -1;
@@ -65,7 +63,9 @@ const WheelGame = (() => {
   }
 
   function restart() {
-    setupItems();
+    if (isPlaying || isLoading) return
+
+    setupPrizes();
     render();
     update();
   }
@@ -94,24 +94,11 @@ const WheelGame = (() => {
   function finalize() {
     const rotation = currentRotation + segmentSize / 2;
     const index = Math.max(0, Math.floor(rotation / segmentSize));
-    const reward = currentItems[index];
-
-    let rewardName = "Nothing";
-    if (reward) {
-      if (reward.type === "bonus") {
-        const bonusItem = itemDB.getItem(reward.value);
-        rewardName = bonusItem.name;
-      } else {
-        rewardName = reward.value;
-      }
-    }
-
-    controlBar.displayMessage(`YOU WON ${rewardName}`);
+    const reward = currentPrizes[index];
+    if (reward) giveReward(reward)
   }
 
   return {
-    name,
-    image,
     element,
     get isPlaying() {
       return isPlaying;
@@ -119,4 +106,4 @@ const WheelGame = (() => {
     play,
     restart,
   };
-})();
+}

@@ -45,7 +45,7 @@ class Slideshow extends HTMLElement {
     if (this.disabled) return;
 
     const image = this.images[this.currentIndex];
-    this.currentIndex = cycle(this.currentIndex + direction, this.images.length);
+    this.currentIndex = cycleIndex(this.currentIndex + direction, this.images.length);
     const nextImage = this.images[this.currentIndex];
 
     const moveX = direction >= 0 ? 100 : -100;

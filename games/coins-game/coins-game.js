@@ -1,6 +1,4 @@
-const CoinsGame = (() => {
-  const name = "COINS";
-  const image = "images/coins-game.png";
+const CoinsGame = () => {
   const element = document.querySelector(".coins-game");
   let itemsEl = null;
   let multiplierEl = null;
@@ -14,7 +12,7 @@ const CoinsGame = (() => {
   const isLost = () => openedItems.some((itemIndex) => currentItems[itemIndex] <= 0);
 
   function getItems() {
-    const items = shuffle([...Array.from({ length: 8 }, () => getRandomNumber(1, 5)), 0]);
+    const items = shuffle([...Array.from({ length: 8 }, () => randomInt(1, 5)), 0]);
     return items;
   }
 
@@ -163,8 +161,6 @@ const CoinsGame = (() => {
   }
 
   return {
-    name,
-    image,
     element,
     get isPlaying() {
       return isPlaying;
@@ -174,4 +170,4 @@ const CoinsGame = (() => {
     openItem,
     restart,
   };
-})();
+}

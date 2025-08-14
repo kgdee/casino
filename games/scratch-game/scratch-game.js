@@ -1,6 +1,4 @@
-const ScratchGame = (() => {
-  const name = "SCRATCH";
-  const image = "images/scratch-game.png";
+const ScratchGame = () => {
   const element = document.querySelector(".scratch-game");
   let itemsEl = null;
   let multiplierEl = null;
@@ -276,8 +274,6 @@ const ScratchGame = (() => {
   }
 
   return {
-    name,
-    image,
     element,
     get isPlaying() {
       return isPlaying;
@@ -289,4 +285,4 @@ const ScratchGame = (() => {
     openItem,
     restart,
   };
-})();
+}

@@ -53,7 +53,8 @@ class Inventory extends HTMLElement {
 
   createItemEls() {
     let itemsMap = this.getItemsMap()
-    let items = itemDB.getItems(this.items);
+    const itemIds = this.items.map(item => item.id)
+    let items = itemDB.getItems(itemIds);
     items = items.map((item) => ({
       ...item,
       ...itemsMap[item.id],

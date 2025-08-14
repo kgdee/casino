@@ -1,6 +1,4 @@
-const DiceGame = (() => {
-  const name = "DICE";
-  const image = "images/dice-game.png";
+const DiceGame = () => {
   const element = document.querySelector(".dice-game");
   let tilemap = null;
   let diceContainer = null;
@@ -9,7 +7,12 @@ const DiceGame = (() => {
   const allTileCount = size ** 2;
   const tileCount = (size - 1) * 4;
 
-  const initialPrizes = [{ multiplier: 2 }, { multiplier: 5 }, { itemBonus: 32 }, { itemBonus: 35 }];
+  const initialPrizes = [
+    { type: "multiplier", value: 2 },
+    { type: "multiplier", value: 5 },
+    { type: "bonus", value: 32 },
+    { type: "bonus", value: 35 },
+  ];
   let prizes = initialPrizes;
 
   let isPlaying = false;
@@ -64,15 +67,25 @@ const DiceGame = (() => {
   }
 
   function createTileEl(number, prize) {
-    const label = prize?.multiplier ? `${prize.multiplier}x` : "";
-    const item = prize?.itemBonus ? itemDB.getItem(prize.itemBonus) : null;
+    let content = `
+      <img class="floor" src="images/${prize?.multiplier ? "tile-4.png" : "tile-3.png"}" />
+      <img class="mark" src="images/tile-mark.png" />
+    `;
+
+    if (prize) {
+      if (prize.type === "bonus") {
+        const bonusItem = itemDB.getItem(prize.value);
+        content += `<img class="prize" src="${bonusItem.image}" />`;
+      } else {
+        content += `<span class="prize">x${prize.value}</span>`;
+      }
+    }
+
     return `
       <div data-id="${number}" class="item${prize ? " prize" : ""}">
-        <img class="floor" src="images/${prize?.multiplier ? "tile-4.png" : "tile-3.png"}" />
-        <img class="mark" src="images/tile-mark.png" />
-        ${item ? `<img class="prize" src="${item.image}" />` : ""}
-        ${label ? `<span class="prize">${label}</span>` : ""}
-      </div>`;
+        ${content}
+      </div>
+    `;
   }
 
   async function move() {
@@ -118,7 +131,7 @@ const DiceGame = (() => {
   }
 
   function setupPrizes() {
-    const extraPrizes = Array.from({ length: 2 }, () => ({ itemBonus: itemDB.getItemByRarity([50, 500]).id }));
+    const extraPrizes = Array.from({ length: 2 }, () => ({ type: "bonus", value: itemDB.getItemByRarity([50, 500]).id }));
     prizes = initialPrizes.concat(extraPrizes);
 
     let availableTiles = Array.from({ length: tileCount }, (_, i) => i);
@@ -146,30 +159,18 @@ const DiceGame = (() => {
     if (isLoading) return;
     isPlaying = false;
     setupPrizes();
-    render()
+    render();
     updateTilemap();
     displayDice();
   }
 
   function finalize() {
-    isPlaying = false
-    const prize = prizes.find((prize) => prize.tile === currentTile);
-    if (prize.multiplier) {
-      const multiplier = prize.multiplier;
-      const rewards = currentBet * multiplier;
-      increaseBalance(rewards);
-      Popup.show(multiplier);
-      controlBar.displayMessage(`YOU WON $${rewards}`);
-    } else if (prize.itemBonus) {
-      getBonus(prize.itemBonus)
-      const item = itemDB.getItem(prize.itemBonus)
-      controlBar.displayMessage(`You got ${item.name}`);
-    }
+    isPlaying = false;
+    const reward = prizes.find((prize) => prize.tile === currentTile);
+    if (reward) giveReward(reward);
   }
 
   return {
-    name,
-    image,
     element,
     get isPlaying() {
       return isPlaying;
@@ -177,4 +178,4 @@ const DiceGame = (() => {
     play,
     restart,
   };
-})();
+}

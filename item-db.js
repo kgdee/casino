@@ -18,13 +18,9 @@ class ItemDB {
     return itemData;
   }
 
-  getItems(refs) {
-    // Build a Set of IDs for fast lookup
-    const idSet = new Set(refs.map((ref) => ref.id));
-
-    // Filter items by checking if id is in the Set
-    const result = this.items.filter((item) => idSet.has(item.id));
-    return result
+  getItems(itemIds) {
+    const idSet = new Set(itemIds); // Faster lookups
+    return this.items.filter(item => idSet.has(item.id));
   }
 
   getTier() {

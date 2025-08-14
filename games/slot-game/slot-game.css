@@ -1,0 +1,96 @@
+
+.slot-game .panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.slot-game .title-img {
+  width: 200px;
+}
+
+.slot-game.playing .title-img {
+  animation: flash 1s forwards;
+}
+
+.slot-game.playing .reel {
+  border-image-source: linear-gradient(to bottom, #3333ff, white, #ff00cc);
+}
+
+.slot-game.win .reel {
+  animation: borderFlash 0.3s steps(1);
+  animation-iteration-count: 3;
+}
+
+.slot-game .reels {
+  display: flex;
+  gap: 5px;
+}
+
+.slot-game .reel {
+  width: 100px;
+  height: 150px;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #222, #444, #222);
+  border: 2px solid;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(to bottom, #555, #ccc, #555);
+}
+
+.slot-game .reel .items {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.slot-game .reel .items .item {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 50px;
+}
+
+.slot-game .reel .items .item img {
+  width: 32px;
+  aspect-ratio: 1 / 1;
+}
+
+.slot-game .spin-btn {
+  width: 100px;
+  aspect-ratio: 215 / 79;
+  font-weight: bold;
+  background-color: transparent;
+  background-image: url(images/button-1.png);
+}
+
+.slot-game .spin-btn:active {
+  filter: brightness(1.5);
+}
+
+@keyframes flash {
+  0% {
+    filter: revert;
+  }
+  50% {
+    filter: brightness(2);
+  }
+  100% {
+    filter: revert;
+  }
+}
+
+@keyframes borderFlash {
+  0% {
+    border-image-source: linear-gradient(to bottom, gold, white, gold);
+  }
+  50% {
+    border-image-source: linear-gradient(to bottom, #555, #ccc, #555);
+  }
+  100% {
+    border-image-source: linear-gradient(to bottom, gold, white, gold);
+  }
+}

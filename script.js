@@ -1,7 +1,35 @@
+const gameScreen = document.querySelector(".game-screen")
 const gameMenu = document.querySelector(".game-menu");
 
 const itemDB = new ItemDB(gameItems);
-const games = [WheelGame, ScratchGame, LaserGame, CoinsGame, DiceGame];
+const games = [ SlotGame, WheelGame, ScratchGame, DiceGame, LaserGame, CoinsGame];
+const gameDetails = [
+  {
+    name: "SLOT",
+    image: "images/slot-game.png",
+  },
+  {
+    name: "WHEEL",
+    image: "images/wheel-game.png",
+  },
+  {
+    name: "SCRATCH",
+    image: "images/scratch-game.png",
+  },
+  {
+    name: "DICE",
+    image: "images/dice-game.png",
+  },
+  {
+    name: "LASER",
+    image: "images/laser-game.png",
+  },
+  {
+    name: "COINS",
+    image: "images/coins-game.png",
+  },
+];
+
 const timeOuts = { message: null };
 let currentBalance = load("currentBalance", 2000);
 let currentGame = null;
@@ -20,15 +48,15 @@ document.addEventListener("DOMContentLoaded", async function () {
   await controlBar.ready;
   toggleDarkTheme(isDarkTheme);
   updateUI();
-  openGame(0);
+  // openGame(0);
 });
 
 function displayGameMenu() {
-  gameMenu.querySelector(".items").innerHTML = games
+  gameMenu.querySelector(".items").innerHTML = gameDetails
     .map(
-      (game, i) => `
-      <div class="item" onclick="openGame(${i})" style="background-image: url(${game.image})">
-        <span class="bottom">${game.name}</span>
+      (gameDetail, i) => `
+      <div class="item" onclick="openGame(${i})" style="background-image: url(${gameDetail.image})">
+        <span class="bottom">${gameDetail.name}</span>
       </div>
     `
     )
@@ -75,7 +103,7 @@ function goHome() {
 }
 
 function openGame(gameIndex) {
-  currentGame = games[gameIndex];
+  currentGame = games[gameIndex]();
 
   if (!currentGame) return;
 
@@ -86,7 +114,7 @@ function openGame(gameIndex) {
 }
 
 function displayGame() {
-  document.querySelectorAll(".game").forEach((el) => {
+  gameScreen.querySelectorAll(".game").forEach((el) => {
     el.classList.add("hidden");
   });
 
@@ -137,12 +165,29 @@ function handleModalLayer(element) {
   element.style.zIndex = modalLayer;
 }
 
-async function getBonus(itemId) {
-  const item = itemDB.getItem(itemId);
-  inventory.addItem(item.id);
+async function giveReward(reward) {
+  switch (reward.type) {
+    case "multiplier":
+      const multiplier = reward.value;
+      const rewards = currentBet * multiplier;
+      increaseBalance(rewards);
 
-  await sleep(1000)
-  rewardModal.toggle([item]);
+      controlBar.displayMessage(`YOU WON $${rewards}`);
+      Popup.show(multiplier);
+      break;
+    case "bonus":
+      const itemId = reward.value;
+      const item = itemDB.getItem(itemId);
+      inventory.addItem(item.id);
+
+      controlBar.displayMessage(`You got ${item.name}`);
+      await sleep(500);
+      rewardModal.toggle([item]);
+      break;
+
+    default:
+      break;
+  }
 }
 
 const keyActions = {
