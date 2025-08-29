@@ -72,12 +72,6 @@ function pay(amount) {
   return true;
 }
 
-function updateUI() {
-  navbar.update();
-  controlBar.update();
-  controlBar.toggle(currentGame);
-}
-
 function launchConfetti() {
   const color = getArrayItem(confettiColors);
   confetti({
@@ -98,8 +92,6 @@ function increaseBet(amount) {
   currentBet = newBet;
 
   save("currentBet", currentBet);
-
-  updateUI();
 }
 
 function toggleCheat() {

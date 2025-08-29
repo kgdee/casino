@@ -29,14 +29,13 @@ class Home extends HTMLElement {
     this.gameMenu = this.element.querySelector(".game-menu");
     this.displayGameMenu()
     ticker.start();
-    navbar.update()
   }
 
   displayGameMenu() {
     this.gameMenu.querySelector(".items").innerHTML = gameDetails
     .map(
       (gameDetail, i) => `
-      <a href="/#/${gameDetails[i].name.toLowerCase()}" class="item" style="background-image: url(${gameDetail.image})">
+      <a href="#/${gameDetails[i].name.toLowerCase()}" class="item" style="background-image: url(${gameDetail.image})">
         <span class="bottom">${gameDetail.name}</span>
       </a>
     `

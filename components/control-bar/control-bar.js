@@ -29,10 +29,6 @@ class ControlBar extends HTMLElement {
     this.update()
   }
 
-  toggle(force) {
-    this.element.classList.toggle("hidden", force != null ? !force : undefined);
-  }
-
   update() {
     this.betDisplay.innerHTML = `Total bet<br />$${currentBet}`;
   }

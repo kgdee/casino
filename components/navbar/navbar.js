@@ -25,6 +25,8 @@ class Navbar extends HTMLElement {
     this.balanceText = this.element.querySelector(".balance span");
     this.themeToggle = this.element.querySelector(".theme-toggle");
     Array.from(this.menuEl.children).forEach((el) => el.addEventListener("click", () => this.toggle(false)));
+
+    this.update()
   }
 
   toggle(force) {

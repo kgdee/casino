@@ -10,7 +10,7 @@ const routes = {
 
 function router() {
   const path = location.hash.slice(1) || "/";
-  document.querySelector(".app").innerHTML = `<my-layout>${routes[path]}</my-layout>` || "<h1>404</h1>";
+  document.querySelector("my-layout").innerHTML = `${routes[path]}` || "<h1>404</h1>";
 }
 
 window.addEventListener("hashchange", router);
