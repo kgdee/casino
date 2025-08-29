@@ -1,5 +1,6 @@
-const CoinsGame = () => {
-  const element = document.querySelector(".coins-game");
+const CoinsGame = (parentEl) => {
+  parentEl.insertAdjacentHTML("afterbegin", `<div class="coins-game"></div>`)
+  const element = parentEl.querySelector(".coins-game");
   let itemsEl = null;
   let multiplierEl = null;
 
@@ -16,8 +17,10 @@ const CoinsGame = () => {
     return items;
   }
 
-  function render() {
+  async function render() {
+    const styleEls = await createStyleEls(["utils.css", "games/coins-game/coins-game.css"]);
     element.innerHTML = `
+      ${styleEls}
       <div class="panel">
         <div class="multiplier flex-center"></div>
         <div class="items"></div>
@@ -36,7 +39,7 @@ const CoinsGame = () => {
         if (shouldReveal) icon = item === 0 ? "chip-skull.png" : "chip-dollar.png";
 
         return `
-        <div data-index="${i}" class="item" onclick="CoinsGame.openItem(${i})">
+        <div data-index="${i}" class="item" onclick="currentGame.openItem(${i})">
           <img src="images/${icon}" />
         </div>
       `;
@@ -133,14 +136,14 @@ const CoinsGame = () => {
     update();
   }
 
-  function restart() {
+  async function restart() {
     if (isPlaying || isLoading) return;
     currentItems = getItems();
     openedItems = [];
     isPlaying = false;
     totalRewards = 0;
     isFinished = false;
-    render()
+    await render()
     update();
   }
 
@@ -150,7 +153,7 @@ const CoinsGame = () => {
 
     if (!isLost()) {
       increaseBalance(totalRewards);
-      Popup.show(getMultiplier());
+      popupBanner.show(getMultiplier());
       controlBar.displayMessage(`YOU WON $${totalRewards}`);
     } else {
       controlBar.displayMessage("GAME OVER");

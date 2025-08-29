@@ -1,74 +1,86 @@
-const Ticker = (() => {
-  const element = document.querySelector(".ticker");
-  let itemsEl = null;
+class Ticker extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
 
-  const items = [
-    { game: 0, amount: "$32", user: "James" },
-    { game: 1, amount: "$10", user: "Mary" },
-    { game: 2, amount: "$201", user: "John" },
-    { game: 3, amount: "$50", user: "Sarah" },
-    { game: 0, amount: "$100", user: "Michael" },
-    { game: 1, amount: "$29", user: "Emily" },
-    { game: 2, amount: "$12", user: "David" },
-    { game: 3, amount: "$85", user: "Jessica" },
-  ];
+    this.element = null;
+    this.itemsEl = null;
 
-  const max = 7;
-  const rate = 1;
-  const interval = 2;
-  const itemWidth = 150;
-  const gap = 10
+    this.items = [
+      { game: 0, amount: "$32", user: "James" },
+      { game: 1, amount: "$10", user: "Mary" },
+      { game: 2, amount: "$201", user: "John" },
+      { game: 3, amount: "$50", user: "Sarah" },
+      { game: 0, amount: "$100", user: "Michael" },
+      { game: 1, amount: "$29", user: "Emily" },
+      { game: 2, amount: "$12", user: "David" },
+      { game: 3, amount: "$85", user: "Jessica" },
+    ];
 
-  let currentItem = -1;
+    this.max = 7;
+    this.rate = 1;
+    this.interval = 2;
+    this.itemWidth = 150;
+    this.gap = 10;
+    this.step = 0;
+    
+    this.ready = this.render();
+    globalThis.ticker = this;
+  }
 
-  function render() {
-    element.innerHTML = `
-      <div class="title flex-center">
-        <span>NEWS</span>
-      </div>
-      <div class="items-outer">
-        <div class="items"></div>
+  async render() {
+    const styleEls = await createStyleEls(["utils.css", "components/ticker/ticker.css"]);
+    this.shadowRoot.innerHTML = `
+      ${styleEls}
+      <div class="ticker">
+        <div class="title flex-center">
+          <span>NEWS</span>
+        </div>
+        <div class="items-outer">
+          <div class="items"></div>
+        </div>
       </div>
     `;
 
-    itemsEl = element.querySelector(".items");
-    itemsEl.style.gap = `${gap}px`
+    this.element = this.shadowRoot.querySelector(".ticker");
+    this.itemsEl = this.element.querySelector(".items");
+    this.itemsEl.style.gap = `${this.gap}px`;
   }
 
-  async function start() {
-    render();
-    items.forEach((item) => addItemEl(item));
+  async start() {
+    await this.render();
+    this.items.forEach((item) => this.addItemEl(item));
 
-    update();
+    this.update();
   }
 
-  async function update() {
-    currentItem = (currentItem + 1) % items.length;
-    const item = items[currentItem];
+  async update() {
+    const item = this.items[this.step];
+    this.step = (this.step + 1) % this.items.length;
 
-    addItemEl(item);
+    this.addItemEl(item);
 
-    itemsEl.style.transition = `transform ${rate}s linear`;
-    itemsEl.style.transform = `translateX(-${itemWidth + gap}px)`;
+    this.itemsEl.style.transition = `transform ${this.rate}s linear`;
+    this.itemsEl.style.transform = `translateX(-${this.itemWidth + this.gap}px)`;
 
-    await sleep(1000 * rate);
+    await sleep(1000 * this.rate);
 
-    itemsEl.style.transition = null;
-    itemsEl.style.transform = null;
+    this.itemsEl.style.transition = null;
+    this.itemsEl.style.transform = null;
 
-    if (itemsEl.children.length >= max) {
-      itemsEl.children[0].remove();
+    if (this.itemsEl.children.length >= this.max) {
+      this.itemsEl.children[0].remove();
     }
 
-    await sleep(1000 * interval);
-    update();
+    await sleep(1000 * this.interval);
+    this.update();
   }
 
-  function addItemEl(item) {
-    itemsEl.insertAdjacentHTML(
+  addItemEl(item) {
+    this.itemsEl.insertAdjacentHTML(
       "beforeend",
       `
-      <div class="item" style="width: ${itemWidth}px;">
+      <div class="item" style="width: ${this.itemWidth}px;">
         <img src="${gameDetails[item.game].image}" />
         <div class="details">
           <span class="amount">${item.amount}</span>
@@ -79,6 +91,6 @@ const Ticker = (() => {
     `
     );
   }
+}
 
-  return { start };
-})();
+customElements.define("my-ticker", Ticker);

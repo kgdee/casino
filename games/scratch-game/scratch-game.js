@@ -1,27 +1,28 @@
-const ScratchGame = () => {
-  const element = document.querySelector(".scratch-game");
-  let itemsEl = null;
+const ScratchGame = (parentEl) => {
+  parentEl.insertAdjacentHTML("afterbegin", `<div class="scratch-game"></div>`);
+  const element = parentEl.querySelector(".scratch-game");
+  let slotsEl = null;
   let multiplierEl = null;
 
-  const initialItems = [
+  const initialPrizes = [
     { name: "2", type: "multiplier", value: 2 },
     { name: "5", type: "multiplier", value: 5 },
     { name: "7", type: "multiplier", value: 7, image: "images/7.png" },
   ];
-  let currentItems = [];
-  let openedItems = [];
+  let currentPrizes = [];
+  let revealedSlots = [];
   let currentMatches = [];
   let isPlaying = false;
   let totalRewards = 0;
   let isFinished = false;
   let isLoading = false;
-  const isLost = () => openedItems.some((itemIndex) => currentItems[itemIndex].type === "penalty");
+  const isLost = () => revealedSlots.some((prizeIndex) => currentPrizes[prizeIndex].type === "penalty");
 
-  function setupItems() {
-    let items = initialItems;
-    items = Array.from({ length: 15 }, () => getArrayItem(items));
+  function setupPrizes() {
+    let prizes = initialPrizes;
+    prizes = Array.from({ length: 15 }, () => getArrayItem(prizes));
 
-    items = items.concat([
+    prizes = prizes.concat([
       { type: "penalty", image: "images/bomb.png" },
       { type: "bonus", value: 32 },
       { type: "bonus", value: 35 },
@@ -29,11 +30,13 @@ const ScratchGame = () => {
       { type: "bonus", value: itemDB.getItemByRarity([50, 500]).id },
     ]);
 
-    currentItems = shuffle(items);
+    currentPrizes = shuffle(prizes);
   }
 
-  function render() {
+  async function render() {
+    const styleEls = await createStyleEls(["utils.css", "games/scratch-game/scratch-game.css"]);
     element.innerHTML = `
+      ${styleEls}
       <div class="panel">
         <div class="title">
           <img src="images/scratch-logo.png" />
@@ -43,51 +46,51 @@ const ScratchGame = () => {
           <img src="images/logo.png" />
         </div>
         <div class="multiplier sticker flex-center"></div>
-        <div class="items"></div>
+        <div class="scratchables"></div>
       </div>
     `;
 
-    itemsEl = element.querySelector(".items");
-    itemsEl.style = "grid-template-columns: repeat(5, 50px);";
+    slotsEl = element.querySelector(".scratchables");
+    slotsEl.style = "grid-template-columns: repeat(5, 50px);";
     multiplierEl = element.querySelector(".multiplier");
   }
 
-  function displayItems() {
-    itemsEl.innerHTML = currentItems.map((item, i) => createItemEl(item, i)).join("");
+  function displaySlots() {
+    slotsEl.innerHTML = currentPrizes.map((prize, i) => createSlotEl(prize, i)).join("");
   }
 
   function update() {
-    Array.from(itemsEl.children).forEach((el, i) => {
+    Array.from(slotsEl.children).forEach((el, i) => {
       const matched = currentMatches.some((match) => match.includes(i));
-      const revealed = openedItems.includes(i);
+      const revealed = revealedSlots.includes(i);
 
       el.classList.toggle("revealed", revealed);
       el.classList.toggle("matched", matched);
     });
 
-    controlBar.playBtn.innerHTML = isPlaying ? "End" : "Play";
+    controlBar.update();
     multiplierEl.innerHTML = `${getTotalMultiplier()}x`;
   }
 
   function toggleCheat() {
-    currentItems.forEach((item, i) => revealItem(i, isCheatEnabled));
+    currentPrizes.forEach((prize, i) => toggleSlot(i, isCheatEnabled));
   }
 
-  function createItemEl(item, index) {
-    const shouldReveal = openedItems.includes(index);
+  function createSlotEl(prize, index) {
+    const shouldReveal = revealedSlots.includes(index);
     let content = "";
 
-    if (item.type === "bonus") {
-      const bonusItem = itemDB.getItem(item.value);
+    if (prize.type === "bonus") {
+      const bonusItem = itemDB.getItem(prize.value);
       content = `<img class="content center" src="${bonusItem.image}" />`;
-    } else if (item.image) {
-      content = `<img class="content center" src="${item.image}" />`;
+    } else if (prize.image) {
+      content = `<img class="content center" src="${prize.image}" />`;
     } else {
-      content = `<span class="content flex-center center">${item.name}</span>`;
+      content = `<span class="content flex-center center">${prize.name}</span>`;
     }
 
     return `
-        <div class="item ${shouldReveal ? "reveal" : ""}" onclick="ScratchGame.openItem(${index})">
+        <div class="scratchable ${shouldReveal ? "reveal" : ""}" onclick="currentGame.revealSlot(${index})">
         ${content}
         <div class="coat flex-center">
           <img src="images/scratch-coat.png" />
@@ -99,16 +102,16 @@ const ScratchGame = () => {
 
   function getTotalMultiplier() {
     let multiplier = 0;
-    if (!isLost() && openedItems.length > 0) {
-      const items = getItemsByMatches();
-      multiplier = items.reduce((sum, item) => sum + item.value, 0);
+    if (!isLost() && revealedSlots.length > 0) {
+      const prizes = getPrizesByMatches();
+      multiplier = prizes.reduce((sum, item) => sum + item.value, 0);
     }
     return multiplier;
   }
 
   function handleTotalRewards() {
     let rewards = 0;
-    if (openedItems.length > 0 && !isLost()) {
+    if (revealedSlots.length > 0 && !isLost()) {
       const multiplier = getTotalMultiplier();
       rewards = currentBet * multiplier;
     }
@@ -116,7 +119,7 @@ const ScratchGame = () => {
     totalRewards = rewards;
   }
 
-  async function openItem(index) {
+  async function revealSlot(index) {
     if (isLoading) return;
     if (isFinished) {
       restart();
@@ -124,33 +127,32 @@ const ScratchGame = () => {
     }
     if (!isPlaying) play();
 
-    if (openedItems.includes(index)) return;
+    if (revealedSlots.includes(index)) return;
 
-    openedItems.push(index);
+    revealedSlots.push(index);
 
     handleMatches();
     handleTotalRewards();
 
-    isFinished = openedItems.length >= currentItems.length;
+    isFinished = revealedSlots.length >= currentPrizes.length;
 
     if (isLost() || isFinished) {
       finalize();
     } else {
-      const item = currentItems[index]
-      if (item.type === "bonus") getBonus(item.value)
-      controlBar.displayMessage(`Total rewards<br />$${totalRewards}`);
+      const prize = currentPrizes[index];
+      if (prize.type === "bonus") giveReward(prize);
     }
 
     update();
   }
 
-  async function reveal() {
+  async function revealAll() {
     isLoading = true;
     await sleep(3000);
-    for (let i = 0; i < currentItems.length; i++) {
-      if (openedItems.includes(i)) continue;
+    for (let i = 0; i < currentPrizes.length; i++) {
+      if (revealedSlots.includes(i)) continue;
 
-      revealItem(i, true);
+      toggleSlot(i, true);
 
       await sleep(250);
     }
@@ -158,11 +160,11 @@ const ScratchGame = () => {
     isLoading = false;
   }
 
-  function revealItem(itemIndex, force) {
-    force = force || openedItems.includes(itemIndex);
+  function toggleSlot(index, force) {
+    force = force || revealedSlots.includes(index);
 
-    const itemEl = itemsEl.children[itemIndex];
-    itemEl.classList.toggle("revealed", force);
+    const slotEl = slotsEl.children[index];
+    slotEl.classList.toggle("revealed", force);
   }
 
   function play() {
@@ -182,23 +184,23 @@ const ScratchGame = () => {
     if (!isPaid) return;
 
     isPlaying = true;
-    update()
+    update();
   }
 
-  function restart() {
+  async function restart() {
     if (isPlaying || isLoading) return;
 
-    setupItems();
+    setupPrizes();
 
-    openedItems = [];
+    revealedSlots = [];
     currentMatches = [];
     isPlaying = false;
     totalRewards = 0;
     isFinished = false;
-    
-    render();
-    displayItems();
-    update()
+
+    await render();
+    displaySlots();
+    update();
   }
 
   function finalize() {
@@ -207,20 +209,20 @@ const ScratchGame = () => {
 
     if (!isLost()) {
       increaseBalance(totalRewards);
-      Popup.show(getTotalMultiplier());
+      popupBanner.show(getTotalMultiplier());
       controlBar.displayMessage(`YOU WON $${totalRewards}`);
     } else {
       controlBar.displayMessage("GAME OVER");
     }
 
     update();
-    reveal();
+    revealAll();
   }
 
   function handleMatches() {
-    const items = currentItems;
+    const prizes = currentPrizes;
     const sizeX = 5;
-    const sizeY = Math.floor(items.length / sizeX);
+    const sizeY = Math.floor(prizes.length / sizeX);
     const matchLength = 3;
 
     const directions = [
@@ -232,15 +234,15 @@ const ScratchGame = () => {
 
     const matches = []; // store groups of matching indexes
 
-    function isMatchable(item, index) {
-      return item?.type === "multiplier" && openedItems.includes(index);
+    function isMatchable(prize, slotIndex) {
+      return prize?.type === "multiplier" && revealedSlots.includes(slotIndex);
     }
 
-    for (let i = 0; i < items.length; i++) {
+    for (let i = 0; i < prizes.length; i++) {
       const y = Math.floor(i / sizeX);
       const x = i % sizeX;
-      const item = items[i];
-      if (!isMatchable(item, i)) continue;
+      const prize = prizes[i];
+      if (!isMatchable(prize, i)) continue;
 
       for (let [dy, dx] of directions) {
         const chain = [[x, y]];
@@ -249,9 +251,9 @@ const ScratchGame = () => {
 
         while (nx >= 0 && nx < sizeX && ny >= 0 && ny < sizeY) {
           const nIndex = ny * sizeX + nx;
-          const nItem = items[nIndex];
-          if (!isMatchable(nItem, nIndex)) break;
-          if (nItem.name !== item.name) break;
+          const nPrize = prizes[nIndex];
+          if (!isMatchable(nPrize, nIndex)) break;
+          if (nPrize.name !== prize.name) break;
 
           chain.push([nx, ny]);
           nx += dx;
@@ -268,9 +270,9 @@ const ScratchGame = () => {
     currentMatches = matches;
   }
 
-  function getItemsByMatches() {
-    const items = currentMatches.map((match) => currentItems[match[0]]); // One representative per match
-    return items;
+  function getPrizesByMatches() {
+    const prizes = currentMatches.map((match) => currentPrizes[match[0]]); // One representative per match
+    return prizes;
   }
 
   return {
@@ -279,10 +281,10 @@ const ScratchGame = () => {
       return isPlaying;
     },
     play,
-    displayItems,
+    displaySlots,
     update,
     toggleCheat,
-    openItem,
+    revealSlot,
     restart,
   };
-}
+};

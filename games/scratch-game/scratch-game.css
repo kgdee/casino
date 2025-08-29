@@ -4,6 +4,7 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  width: min-content;
   background: linear-gradient(to top, #d20b12, #881103);
   border: 2px solid;
   border-image: linear-gradient(to bottom, gold, white, gold) 1;
@@ -47,52 +48,52 @@
   border-bottom-left-radius: 8px;
 }
 
-.scratch-game .items {
+.scratch-game .scratchables {
   display: grid;
   grid-auto-rows: 50px;
   border: 2px solid;
   border-image: linear-gradient(to bottom, salmon, white, salmon) 1;
 }
 
-.scratch-game .item {
+.scratch-game .scratchable {
   position: relative;
   cursor: default;
   background-color: wheat;
   color: #333;
 }
 
-.scratch-game .item > * {
+.scratch-game .scratchable > * {
   position: absolute;
   width: 100%;
   height: 100%;
 }
 
-.scratch-game .item .mark {
+.scratch-game .scratchable .mark {
   visibility: hidden;
   border: 2px solid white;
 }
 
-.scratch-game .item .content {
+.scratch-game .scratchable .content {
   visibility: hidden;
   width: 70%;
   height: 70%;
   font-size: 1.2rem;
 }
 
-.scratch-game .item .coat {
+.scratch-game .scratchable .coat {
   background-color: #d20b12;
   padding: 5px;
 }
 
-.scratch-game .item.revealed .content {
+.scratch-game .scratchable.revealed .content {
   visibility: visible;
 }
 
-.scratch-game .item.revealed .coat {
+.scratch-game .scratchable.revealed .coat {
   mask-image: url(../../images/scratch-mask-2.png);
   mask-size: cover;
 }
 
-.scratch-game .item.matched .mark {
+.scratch-game .scratchable.matched .mark {
   visibility: visible;
 }

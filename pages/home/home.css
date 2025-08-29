@@ -1,0 +1,46 @@
+
+.home {
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.home .game-menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 400px;
+  padding: 10px 0;
+}
+
+.home .game-menu .items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+}
+
+.home .game-menu .item {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+}
+
+.home .game-menu .item span {
+  background-color: black;
+  color: white;
+  font-size: 1.2rem;
+  padding: 5px;
+}
+
+.home .cta {
+  width: 100%;
+  max-height: 300px;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+}

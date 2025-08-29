@@ -1,5 +1,6 @@
-const LaserGame = () => {
-  const element = document.querySelector(".laser-game");
+const LaserGame = (parentEl) => {
+  parentEl.insertAdjacentHTML("afterbegin", `<div class="laser-game"></div>`)
+  const element = parentEl.querySelector(".laser-game");
   let arrow = null;
   let segmentsEl = null;
 
@@ -20,8 +21,10 @@ const LaserGame = () => {
 
   let selectedItem = -1;
 
-  function render() {
+  async function render() {
+    const styleEls = await createStyleEls(["utils.css", "games/laser-game/laser-game.css"]);
     element.innerHTML = `
+      ${styleEls}
       <div class="panel">
         <div class="arrow flexbox">
           <div class="line"></div>
@@ -111,15 +114,15 @@ const LaserGame = () => {
     increaseBalance(getSegmentPrize(selectedItem));
     isPlaying = false;
     update();
-    Popup.show(items[selectedItem].multiplier);
+    popupBanner.show(items[selectedItem].multiplier);
     controlBar.displayMessage(`YOU WON $${getSegmentPrize(selectedItem)}`);
   }
 
-  function restart() {
+  async function restart() {
     if (isPlaying) return;
     selectedItem = -1;
     shuffleItems();
-    render()
+    await render()
     update();
   }
 

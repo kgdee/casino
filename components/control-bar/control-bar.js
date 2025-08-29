@@ -24,6 +24,8 @@ class ControlBar extends HTMLElement {
     this.playBtn = this.element.querySelector(".play");
     this.messageEl = this.element.querySelector(".message p");
     this.betDisplay = this.element.querySelector(".bet span");
+
+    this.displayMessage();
   }
 
   toggle(force) {
@@ -32,6 +34,7 @@ class ControlBar extends HTMLElement {
 
   update() {
     this.betDisplay.innerHTML = `Total bet<br />$${currentBet}`;
+    this.playBtn.innerHTML = currentGame.isPlaying ? "End" : "Play";
   }
 
   displayMessage(message) {

@@ -1,5 +1,7 @@
 .wheel-game .wrapper {
   position: relative;
+  width: min-content;
+  margin: auto;
 }
 
 .wheel-game .arrow {

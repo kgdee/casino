@@ -1,5 +1,6 @@
-const SlotGame = () => {
-  let element = document.querySelector(".slot-game");
+const SlotGame = (parentEl) => {
+  parentEl.insertAdjacentHTML("afterbegin", `<div class="slot-game"></div>`)
+  let element = parentEl.querySelector(".slot-game");
   let reelsEl = null;
 
   const totalReels = 3;
@@ -21,8 +22,10 @@ const SlotGame = () => {
 
   let isPlaying = false;
 
-  function render() {
+  async function render() {
+    const styleEls = await createStyleEls(["utils.css", "games/slot-game/slot-game.css"]);
     element.innerHTML = `
+      ${styleEls}
       <div class="panel">
         <img src="images/slot-game-title.png" class="title-img">
         <div class="reels"></div>
@@ -171,10 +174,10 @@ const SlotGame = () => {
     }
   }
 
-  function restart() {
+  async function restart() {
     if (isPlaying) return
 
-    render();
+    await render();
     reels = generateReels()
     displayReels();
   }

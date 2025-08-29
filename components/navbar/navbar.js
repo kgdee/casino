@@ -31,7 +31,8 @@ class Navbar extends HTMLElement {
     this.menuEl.classList.toggle("m-hidden", force != null ? !force : undefined);
   }
 
-  update() {
+  async update() {
+    await this.ready
     this.balanceText.textContent = currentBalance;
 
     this.themeToggle.innerHTML = isDarkTheme ? `<i class="bi bi-brightness-high"></i>` : `<i class="bi bi-moon"></i>`;

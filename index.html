@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="games/laser-game/laser-game.css" />
     <link rel="stylesheet" href="games/wheel-game/wheel-game.css" />
     <link rel="stylesheet" href="games/slot-game/slot-game.css" />
-    <link rel="stylesheet" href="components/popup/popup.css" />
     <link rel="stylesheet" href="components/ticker/ticker.css" />
     <!-- canvas-confetti library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -22,7 +21,7 @@
     <script src="utils.js" defer></script>
     <script src="item-db.js" defer></script>
     <script src="components/toast/toast.js" defer></script>
-    <script src="components/popup/popup.js" defer></script>
+    <script src="components/popup-banner/popup-banner.js" defer></script>
     <script src="components/slideshow/slideshow.js" defer></script>
     <script src="components/ticker/ticker.js" defer></script>
     <script src="components/inventory/inventory.js" defer></script>
@@ -39,44 +38,13 @@
     <script src="games/slot-game/slot-game.js" defer></script>
     <script src="components/navbar/navbar.js" defer></script>
     <script src="components/control-bar/control-bar.js" defer></script>
+    <script src="pages/home/home.js" defer></script>
+    <script src="pages/game/game.js" defer></script>
+    <script src="pages/layout/layout.js" defer></script>
     <script src="script.js" defer></script>
+    <script src="router.js" defer></script>
   </head>
   <body>
-    <div class="app">
-      <my-navbar></my-navbar>
-      <main class="container">
-        <div class="screen home-screen">
-          <my-slideshow></my-slideshow>
-          <div class="ticker"></div>
-          <div class="game-menu">
-            <h2><i class="bi bi-fire" style="color: red;"></i> Top Games</h2>
-            <div class="items"></div>
-          </div>
-
-          <img src="images/background-3.jpg" class="cta">
-        </div>
-
-        <div class="screen game-screen hidden">
-          <div class="game laser-game hidden"></div>
-          <div class="game scratch-game hidden"></div>
-          <div class="game coins-game flex-center hidden"></div>
-          <div class="game dice-game hidden"></div>
-          <div class="game wheel-game hidden"></div>
-          <div class="game slot-game hidden"></div>
-
-          <my-control-bar></my-control-bar>
-        </div>
-
-        <div class="popup overlay hidden"></div>
-
-        <my-inventory></my-inventory>
-        <my-shop></my-shop>
-        <my-item-modal></my-item-modal>
-        <my-reward-modal></my-reward-modal>
-        <my-dialog></my-dialog>
-        <my-coins-popup></my-coins-popup>
-        <my-toast></my-toast>
-      </main>
-    </div>
+    <div class="app"></div>
   </body>
 </html>

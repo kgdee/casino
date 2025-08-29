@@ -1,5 +1,4 @@
 const gameScreen = document.querySelector(".game-screen")
-const gameMenu = document.querySelector(".game-menu");
 
 const itemDB = new ItemDB(gameItems);
 const games = [ SlotGame, WheelGame, ScratchGame, DiceGame, LaserGame, CoinsGame];
@@ -41,27 +40,12 @@ let isDarkTheme = load("isDarkTheme", true);
 let modalLayer = 0;
 
 document.addEventListener("DOMContentLoaded", async function () {
-  displayGameMenu();
-  Ticker.start();
-
-  await navbar.ready;
-  await controlBar.ready;
   toggleDarkTheme(isDarkTheme);
+  return
+  await controlBar.ready;
   updateUI();
   // openGame(0);
 });
-
-function displayGameMenu() {
-  gameMenu.querySelector(".items").innerHTML = gameDetails
-    .map(
-      (gameDetail, i) => `
-      <div class="item" onclick="openGame(${i})" style="background-image: url(${gameDetail.image})">
-        <span class="bottom">${gameDetail.name}</span>
-      </div>
-    `
-    )
-    .join("");
-}
 
 function play() {
   if (!currentGame) return;
@@ -78,7 +62,7 @@ function increaseBalance(amount) {
   currentBalance = clamp(currentBalance, 0, 99999);
 
   save("currentBalance", currentBalance);
-  updateUI();
+  navbar.update();
   if (amount > 0) coinsPopup.show(amount);
 }
 
@@ -99,27 +83,12 @@ function updateUI() {
 }
 
 function goHome() {
-  changeScreen("home-screen");
+  location.hash = '/';
 }
 
 function openGame(gameIndex) {
-  currentGame = games[gameIndex]();
-
-  if (!currentGame) return;
-
-  changeScreen("game-screen");
-  displayGame();
-  updateUI();
-  controlBar.displayMessage();
-}
-
-function displayGame() {
-  gameScreen.querySelectorAll(".game").forEach((el) => {
-    el.classList.add("hidden");
-  });
-
-  currentGame.element.classList.remove("hidden");
-  currentGame.restart();
+  location.hash = `/${gameDetails[gameIndex].name.toLowerCase()}`;
+  // updateUI();
 }
 
 function launchConfetti() {
@@ -148,13 +117,12 @@ function increaseBet(amount) {
 
 function toggleCheat() {
   isCheatEnabled = !isCheatEnabled;
-  currentGame?.toggleCheat();
+  currentGame?.toggleCheat?.();
 }
 
 function toggleDarkTheme(force) {
   isDarkTheme = force != null ? force : !isDarkTheme;
   document.body.classList.toggle("dark-theme", isDarkTheme);
-  navbar.update();
   save("isDarkTheme", isDarkTheme);
 }
 
@@ -173,7 +141,7 @@ async function giveReward(reward) {
       increaseBalance(rewards);
 
       controlBar.displayMessage(`YOU WON $${rewards}`);
-      Popup.show(multiplier);
+      popupBanner.show(multiplier);
       break;
     case "bonus":
       const itemId = reward.value;

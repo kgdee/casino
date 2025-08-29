@@ -14,63 +14,6 @@ body {
   flex-direction: column;
 }
 
-
-main {
-  display: flex;
-  width: 100%;
-  flex: 1;
-}
-
-.screen {
-  flex: 1;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.home-screen {
-  justify-content: flex-start;
-}
-
-.home-screen .game-menu {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  width: 400px;
-  padding: 10px 0;
-}
-
-.home-screen .game-menu .items {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 10px;
-}
-
-.home-screen .game-menu .item {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  cursor: pointer;
-}
-
-.home-screen .game-menu .item span {
-  background-color: black;
-  color: white;
-  font-size: 1.2rem;
-  padding: 5px;
-}
-
-.home-screen .cta {
-  width: 100%;
-  max-height: 300px;
-  aspect-ratio: 2 / 1;
-  object-fit: cover;
-}
-
 /* Medium screens (Tablets, up to 768px wide) */
 @media (max-width: 768px) {
 

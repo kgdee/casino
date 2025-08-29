@@ -1,5 +1,6 @@
-const WheelGame = () => {
-  const element = document.querySelector(".wheel-game");
+const WheelGame = (parentEl) => {
+  parentEl.insertAdjacentHTML("afterbegin", `<div class="wheel-game"></div>`)
+  const element = parentEl.querySelector(".wheel-game");
   let wheelEl = null;
   let itemsEl = null;
 
@@ -24,8 +25,10 @@ const WheelGame = () => {
     currentPrizes = shuffle(prizes);
   }
 
-  function render() {
+  async function render() {
+    const styleEls = await createStyleEls(["utils.css", "games/wheel-game/wheel-game.css"]);
     element.innerHTML = `
+      ${styleEls}
       <div class="wrapper">
         <img class="arrow" src="images/arrow.png" />
         <div class="wheel">
@@ -62,11 +65,11 @@ const WheelGame = () => {
       `;
   }
 
-  function restart() {
+  async function restart() {
     if (isPlaying || isLoading) return
 
     setupPrizes();
-    render();
+    await render();
     update();
   }
 

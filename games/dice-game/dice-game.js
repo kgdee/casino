@@ -1,5 +1,6 @@
-const DiceGame = () => {
-  const element = document.querySelector(".dice-game");
+const DiceGame = (parentEl) => {
+  parentEl.insertAdjacentHTML("afterbegin", `<div class="dice-game"></div>`)
+  const element = parentEl.querySelector(".dice-game");
   let tilemap = null;
   let diceContainer = null;
 
@@ -20,8 +21,10 @@ const DiceGame = () => {
   let currentTile = 0;
   let diceNumber = Math.floor(Math.random() * 6) + 1;
 
-  function render() {
+  async function render() {
+    const styleEls = await createStyleEls(["utils.css", "games/dice-game/dice-game.css"]);
     element.innerHTML = `
+      ${styleEls}
       <div class="panel">
         <div class="board">
           <div class="tilemap"></div>
@@ -155,11 +158,11 @@ const DiceGame = () => {
     roll();
   }
 
-  function restart() {
+  async function restart() {
     if (isLoading) return;
     isPlaying = false;
     setupPrizes();
-    render();
+    await render();
     updateTilemap();
     displayDice();
   }
