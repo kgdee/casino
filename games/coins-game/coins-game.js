@@ -46,7 +46,7 @@ const CoinsGame = (parentEl) => {
       })
       .join("");
 
-    controlBar.playBtn.innerHTML = isPlaying ? "End" : "Play";
+    controlBar.updatePlayBtn()
     multiplierEl.innerHTML = `${getMultiplier()}x`;
   }
 

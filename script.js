@@ -41,10 +41,6 @@ let modalLayer = 0;
 
 document.addEventListener("DOMContentLoaded", async function () {
   toggleDarkTheme(isDarkTheme);
-  return
-  await controlBar.ready;
-  updateUI();
-  // openGame(0);
 });
 
 function play() {
@@ -80,15 +76,6 @@ function updateUI() {
   navbar.update();
   controlBar.update();
   controlBar.toggle(currentGame);
-}
-
-function goHome() {
-  location.hash = '/';
-}
-
-function openGame(gameIndex) {
-  location.hash = `/${gameDetails[gameIndex].name.toLowerCase()}`;
-  // updateUI();
 }
 
 function launchConfetti() {

@@ -90,7 +90,7 @@
 }
 
 .scratch-game .scratchable.revealed .coat {
-  mask-image: url(../../images/scratch-mask-2.png);
+  mask-image: url(images/scratch-mask-2.png);
   mask-size: cover;
 }
 

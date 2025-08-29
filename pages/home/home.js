@@ -36,9 +36,9 @@ class Home extends HTMLElement {
     this.gameMenu.querySelector(".items").innerHTML = gameDetails
     .map(
       (gameDetail, i) => `
-      <div class="item" onclick="openGame(${i})" style="background-image: url(${gameDetail.image})">
+      <a href="/#/${gameDetails[i].name.toLowerCase()}" class="item" style="background-image: url(${gameDetail.image})">
         <span class="bottom">${gameDetail.name}</span>
-      </div>
+      </a>
     `
     )
     .join("");

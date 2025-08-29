@@ -68,7 +68,7 @@ const ScratchGame = (parentEl) => {
       el.classList.toggle("matched", matched);
     });
 
-    controlBar.update();
+    controlBar.updatePlayBtn();
     multiplierEl.innerHTML = `${getTotalMultiplier()}x`;
   }
 
