@@ -7,22 +7,23 @@ class Slideshow extends HTMLElement {
     this.element = null;
     this.imagesEl = null;
 
-    this.images = "banner-1.jpg banner-2.jpg banner-3.jpg";
+    this.images = null;
     this.interval = 4;
-    this.currentIndex = 0;
     this.intervalId = null;
-    this.disabled = false;
-
-    this.ready = this.render();
+    this.currentIndex = 0;
+    
     this.instanceKey = globalThisPut(this, "slideshows");
   }
 
   static get observedAttributes() {
-    return ["disabled", "images"];
+    return ["images"];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    this[name] = newValue || newValue !== null;
+    if (name ===  "images") {
+      this.images = newValue
+      this.render()
+    }
   }
 
   async render() {
@@ -31,18 +32,21 @@ class Slideshow extends HTMLElement {
     this.shadowRoot.innerHTML = `
       ${styleEls}
       <div class="slideshow">
-        <div class="images"></div>
+        <div class="images">
+          <img src="images/${this.images[0]}" />
+        </div>
         <button class="prev" onclick="${this.instanceKey}.slide(-1)"><i class="bi bi-caret-left"></i></button>
         <button class="next" onclick="${this.instanceKey}.slide(1)"><i class="bi bi-caret-right"></i></button>
       </div>
     `;
     this.element = this.shadowRoot.querySelector(".slideshow");
     this.imagesEl = this.element.querySelector(".images");
-    this.slide();
+    
+    this.resetInterval()
   }
 
   async slide(direction = 1) {
-    if (this.disabled) return;
+    this.resetInterval()
 
     const image = this.images[this.currentIndex];
     this.currentIndex = cycleIndex(this.currentIndex + direction, this.images.length);
@@ -58,11 +62,12 @@ class Slideshow extends HTMLElement {
     await sleep(100);
     this.imagesEl.children[0].style.left = `${-moveX}%`;
     this.imagesEl.children[1].style.left = "0";
+  }
 
-    clearInterval(this.intervalId);
+  resetInterval() {
+    clearInterval(this.intervalId)
     this.intervalId = setInterval(() => {
-      if (this.disabled) clearInterval(this.intervalId);
-      else this.slide();
+      this.slide();
     }, 1000 * this.interval);
   }
 }

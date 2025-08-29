@@ -14,7 +14,7 @@ class Home extends HTMLElement {
     this.shadowRoot.innerHTML = `
       ${styleEls}
       <div class="home">
-        <my-slideshow></my-slideshow>
+        <my-slideshow images="banner-1.jpg banner-2.jpg banner-3.jpg"></my-slideshow>
         <my-ticker></my-ticker>
         <div class="game-menu">
           <h2><i class="bi bi-fire" style="color: red"></i> Top Games</h2>

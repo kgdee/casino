@@ -87,11 +87,12 @@ function increaseBet(amount) {
 
   let newBet = currentBet + amount;
   newBet = Math.round(newBet / 500) * 500;
-  newBet = Math.max(50, newBet);
+  newBet = clamp(newBet, 50, 9999)
   if (newBet === currentBet) return;
   currentBet = newBet;
 
   save("currentBet", currentBet);
+  controlBar.update()
 }
 
 function toggleCheat() {

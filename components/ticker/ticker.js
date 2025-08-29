@@ -7,14 +7,14 @@ class Ticker extends HTMLElement {
     this.itemsEl = null;
 
     this.items = [
-      { game: 0, amount: "$32", user: "James" },
-      { game: 1, amount: "$10", user: "Mary" },
-      { game: 2, amount: "$201", user: "John" },
-      { game: 3, amount: "$50", user: "Sarah" },
-      { game: 0, amount: "$100", user: "Michael" },
-      { game: 1, amount: "$29", user: "Emily" },
-      { game: 2, amount: "$12", user: "David" },
-      { game: 3, amount: "$85", user: "Jessica" },
+      { game: 0, amount: "$32", user: "James8901" },
+      { game: 1, amount: "$10", user: "Mary86" },
+      { game: 2, amount: "$201", user: "John54" },
+      { game: 3, amount: "$50", user: "Sarah0092" },
+      { game: 0, amount: "$100", user: "Michael90" },
+      { game: 1, amount: "$29", user: "Emily7710" },
+      { game: 2, amount: "$12", user: "David0536" },
+      { game: 3, amount: "$85", user: "Jessica0228" },
     ];
 
     this.max = 7;
